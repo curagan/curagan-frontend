@@ -1,4 +1,4 @@
-#Curagan
+# Curagan
 
 ## Commit Message Guidelines
 
