@@ -10,7 +10,8 @@
     "test": "echo No tests found.",
     "format": "prettier --write --ignore-path=.gitignore .",
     "format:check": "prettier --check --ignore-path=.gitignore .",
-    "deploy:vercel": "vercel"
+    "deploy:vercel": "vercel",
+    "commit": "cz"
   },
   "dependencies": {
     "@types/node": "20.6.3",
@@ -25,9 +26,13 @@
     "typescript": "5.2.2"
   },
   "devDependencies": {
+    "@commitlint/cli": "^17.7.1",
+    "@commitlint/config-conventional": "^17.7.0",
     "@tanstack/react-query": "^4.35.3",
     "@tanstack/react-query-devtools": "^4.35.3",
     "autoprefixer": "^10.4.15",
+    "commitizen": "^4.3.0",
+    "cz-conventional-changelog": "^3.3.0",
     "eslint-config-prettier": "^8.10.0",
     "husky": "^8.0.3",
     "lint-staged": "^14.0.1",
@@ -39,5 +44,10 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,md,css,scss}": "prettier --write"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
