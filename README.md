@@ -1,4 +1,4 @@
-## #Curagan
+#Curagan
 
 ## Commit Message Guidelines
 
@@ -39,6 +39,8 @@ This is where you can reference any issues related to this commit (e.g., `Closes
 
 ### Using Commitizen
 
+---
+
 To make crafting these commit messages easier, we've integrated Commitizen:
 
 1. Stage your changes: `git add .`
@@ -46,6 +48,8 @@ To make crafting these commit messages easier, we've integrated Commitizen:
 3. Follow the interactive prompts to craft your commit message.
 
 ### Manual Commits
+
+---
 
 If you prefer not to use Commitizen:
 
@@ -55,5 +59,3 @@ If you prefer not to use Commitizen:
 ### Commit Linting
 
 We use `commitlint` to ensure that commit messages adhere to the Conventional Commits format. If your commit message doesn't meet the standard, the commit will fail. Adjust the message accordingly and try again.
-
----
