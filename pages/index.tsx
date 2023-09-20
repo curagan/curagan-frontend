@@ -1,6 +1,6 @@
 import { NextPage } from 'next';
 import Head from 'next/head';
-import Button from '../components/Button'; // Import the Button component
+import Button from '../components/Button';
 
 const Index: NextPage = () => {
   return (
