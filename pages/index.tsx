@@ -1,15 +1,19 @@
-import { NextPage } from "next";
-import Head from "next/head";
+import { NextPage } from 'next';
+import Head from 'next/head';
+import Button from '../components/Button'; // Import the Button component
 
 const Index: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Curagan</title>
+        <title>curagan</title>
         <meta name="description" content="curagan" />
       </Head>
-      <div className="flex justify-center items-center h-screen">
-        <h1 className="text-8xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">Hello World</h1>
+      <div className="flex flex-col justify-center items-center h-screen space-y-4">
+        <h1 className="text-8xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
+          Hello World
+        </h1>
+        <Button text="Click Me!" onClick={() => alert('Button Clicked!')} />
       </div>
     </>
   );
