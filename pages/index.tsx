@@ -5,7 +5,7 @@ const Index: NextPage = () => {
   return (
     <>
       <Head>
-        <title>curagan</title>
+        <title>Curagan</title>
         <meta name="description" content="curagan" />
       </Head>
       <div className="flex justify-center items-center h-screen">
