@@ -1,55 +1,59 @@
-# curagan
+## #Curagan
 
-🎉 Congratulations, your project was successfully generated with [Create Next Stack](https://www.create-next-stack.com/)!
+## Commit Message Guidelines
 
-To get started, run:
+Our project uses Conventional Commits format for commit messages to ensure consistency and clarity. The project also utilize tooling like Husky and Commitizen to assist and enforce this.
 
-```bash
-npm run dev
+### Format
+
+Each commit message consists of a **header**, **body**, and **footer**. The header is mandatory, while the body and footer are optional.
+
+```
+<type>(<scope>): <subject>
+<BLANK LINE>
+<body>
+<BLANK LINE>
+<footer>
 ```
 
-## Final Steps
+#### Header
 
-There are a few final steps that we were not able to perform automatically. We have provided a complete list for you below. You should take care of these before you can start developing your project. You can delete each item from the list as you go along.
+The header is the most crucial part of the commit message:
 
-### To do:
+- **type**: This represents the nature of the change and can be one of the following:
+  - `feat`: A new feature
+  - `fix`: A bug fix
+  - `docs`: Documentation-only changes
+  - `style`: Changes that don't affect the meaning of the code (white-space, formatting, etc.)
+  - `refactor`: A code change that neither fixes a bug nor adds a feature
+  - `test`: Adding or modifying tests
+  - `chore`: Changes to the build process or auxiliary tools/libraries/documentation
 
-- Integrate Vercel with your repository host for continuous deployments at https://vercel.com/new
+#### Body
 
-## Scripts
+This is where you can provide a more detailed description of the change. You can explain the motivation for the change, contrast this with previous behavior, or even reasons for certain parts of the change.
 
-The table below provides names and descriptions of the npm scripts available in this project.
+#### Footer
 
-Each script is run using `npm run <script-name>`. For example: `npm run dev`.
+This is where you can reference any issues related to this commit (e.g., `Closes #42` or `Related to #57`).
 
-| Name            | Description                                                                    |
-| --------------- | ------------------------------------------------------------------------------ |
-| `test`          | Runs tests                                                                     |
-| `dev`           | Runs the Next.js development server.                                           |
-| `build`         | Generates a production build.                                                  |
-| `start`         | Runs the Next.js production server built using `build` script.                 |
-| `lint`          | Runs [ESLint](https://eslint.org/) to catch linting errors in the source code. |
-| `format`        | Formats all source code in the project.                                        |
-| `format:check`  | Checks the formatting of all code in the project.                              |
-| `deploy:vercel` | Deploy a preview deployment to Vercel                                          |
+### Using Commitizen
 
-## Technologies
+To make crafting these commit messages easier, we've integrated Commitizen:
 
-The table below gives an overview of the technologies used in this project, as well as places to learn more about them.
+1. Stage your changes: `git add .`
+2. Run: `npm run commit`
+3. Follow the interactive prompts to craft your commit message.
 
-| Name            | Links                                                                                                                                                                                                           |
-| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Next.js         | [Website](https://nextjs.org/) - [Docs](https://nextjs.org/docs) - [Learn Next.js](https://nextjs.org/learn) - [GitHub](https://github.com/vercel/next.js) - [Wikipedia](https://en.wikipedia.org/wiki/Next.js) |
-| React           | [Website](https://reactjs.org/) - [Docs](https://reactjs.org/docs/getting-started.html) - [GitHub](https://github.com/facebook/react) - [Wikipedia](<https://en.wikipedia.org/wiki/React_(JavaScript_library)>) |
-| TypeScript      | [Website](https://www.typescriptlang.org/) - [Docs](https://www.typescriptlang.org/docs/) - [GitHub](https://github.com/microsoft/TypeScript) - [Wikipedia](https://en.wikipedia.org/wiki/TypeScript)           |
-| Tailwind CSS    | [Website](https://tailwindcss.com/) - [Docs](https://tailwindcss.com/docs) - [GitHub](https://github.com/tailwindlabs/tailwindcss)                                                                              |
-| React Hook Form | [Website](https://react-hook-form.com/) - [Docs](https://react-hook-form.com/get-started) - [GitHub](https://github.com/react-hook-form/react-hook-form)                                                        |
-| React Query     | [Website](https://tanstack.com/query/latest) - [Docs](https://tanstack.com/query/latest/docs/react/overview) - [GitHub](https://github.com/tanstack/query)                                                      |
-| React Icons     | [Website](https://react-icons.github.io/react-icons/) - [GitHub](https://github.com/react-icons/react-icons)                                                                                                    |
-| ESLint          | [Website](https://eslint.org/) - [Configuration](https://eslint.org/docs/user-guide/configuring/) - [Rules](https://eslint.org/docs/rules/) - [GitHub](https://github.com/eslint/eslint)                        |
-| Prettier        | [Website](https://prettier.io/) - [Docs](https://prettier.io/docs/en/index.html) - [Options](https://prettier.io/docs/en/options.html) - [GitHub](https://github.com/prettier/prettier)                         |
-| npm             | [Website](https://www.npmjs.com/) - [Docs](https://docs.npmjs.com/) - [GitHub](https://github.com/npm/cli)                                                                                                      |
-| GitHub Actions  | [Website](https://github.com/features/actions) - [Docs](https://docs.github.com/en/actions) - [Workflow syntax](https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions)                |
-| Vercel          | [Website](https://vercel.com/) - [Docs](https://vercel.com/docs) - [CLI Docs](https://vercel.com/docs/cli)                                                                                                      |
+### Manual Commits
 
-# curagan-frontend
+If you prefer not to use Commitizen:
+
+1. Ensure your commit message follows the Conventional Commits format.
+2. Commit your changes: `git commit -m "type(scope): subject"`
+
+### Commit Linting
+
+We use `commitlint` to ensure that commit messages adhere to the Conventional Commits format. If your commit message doesn't meet the standard, the commit will fail. Adjust the message accordingly and try again.
+
+---
