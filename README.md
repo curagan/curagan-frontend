@@ -1,5 +1,19 @@
 # Curagan
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Commit Message Guidelines
 
 Our project uses [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) format for commit messages to ensure consistency and clarity. The project also utilize tooling like Husky and Commitizen to assist and enforce this.
