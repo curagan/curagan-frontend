@@ -59,4 +59,4 @@ If you prefer not to use Commitizen:
 
 ### Commit Linting
 
-We use `commitlint` to ensure that commit messages adhere to the Conventional Commits format. If your commit message doesn't meet the standard, the commit will fail. Adjust the message accordingly and try again.
+We use `commitlint` to ensure that commit messages adhere to the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) format. If your commit message doesn't meet the standard, the commit will fail. Adjust the message accordingly and try again.
