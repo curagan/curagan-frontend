@@ -42,6 +42,7 @@ This is where you can reference any issues related to this commit (e.g., `Closes
 ---
 
 To make crafting these commit messages easier, we've integrated Commitizen:
+checkcheck
 
 1. Stage your changes: `git add .`
 2. Run: `npm run commit`
