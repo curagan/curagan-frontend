@@ -53,8 +53,9 @@ To make crafting these commit messages easier, we've integrated Commitizen:
 
 If you prefer not to use Commitizen:
 
-1. Ensure your commit message follows the Conventional Commits format.
+1. Stage your changes: `git add .`
 2. Commit your changes: `git commit -m "type(scope): subject"`
+3. Ensure your commit message follows the Conventional Commits format.
 
 ### Commit Linting
 
