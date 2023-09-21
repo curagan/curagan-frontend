@@ -18,7 +18,6 @@ Each commit message consists of a **header**, **body**, and **footer**. The head
 
 #### Header
 
-cek
 The header is the most crucial part of the commit message:
 
 - **type**: This represents the nature of the change and can be one of the following:
