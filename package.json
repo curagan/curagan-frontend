@@ -11,7 +11,8 @@
     "format": "prettier --write --ignore-path=.gitignore .",
     "format:check": "prettier --check --ignore-path=.gitignore .",
     "deploy:vercel": "vercel",
-    "commit": "cz"
+    "commit": "cz",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@types/node": "20.6.3",
