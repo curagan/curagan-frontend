@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import React from 'react';
+import { LayoutLink } from './LayoutLink';
 
 export const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -16,34 +17,10 @@ export const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
 
       <footer className="w-full flex items-center justify-center bg-[#B3E1FF]">
         <nav className="relative w-full max-w-md flex items-stretch justify-between text-sm overflow-x-auto">
-          <Link
-            href={'/beranda'}
-            className="w-[78px] max-w-[78px] flex flex-col items-center justify-start gap-1 p-2"
-          >
-            <div className="w-12 h-12 rounded-full bg-slate-500"></div>
-            <span>Beranda</span>
-          </Link>
-          <Link
-            href={'/pencarian'}
-            className="w-[78px] max-w-[78px] flex flex-col items-center justify-start gap-1 p-2"
-          >
-            <div className="w-12 h-12 rounded-full bg-slate-500"></div>
-            <span>Pencarian</span>
-          </Link>
-          <Link
-            href={'/riwayat'}
-            className="w-[78px] max-w-[78px] flex flex-col items-center justify-start gap-1 p-2"
-          >
-            <div className="w-12 h-12 rounded-full bg-slate-500"></div>
-            <span>Riwayat Konsultasi</span>
-          </Link>
-          <Link
-            href={'/akun'}
-            className="w-[78px] max-w-[78px] flex flex-col items-center justify-start gap-1 p-2"
-          >
-            <div className="w-12 h-12 rounded-full bg-slate-500"></div>
-            <span>Akun</span>
-          </Link>
+          <LayoutLink name="Beranda" href="/beranda" />
+          <LayoutLink name="Pencarian" href="/pencarian" />
+          <LayoutLink name="Riwayat Konsultasi" href="/riwayat" />
+          <LayoutLink name="Akun" href="/akun" />
         </nav>
       </footer>
     </div>
