@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 interface User {
   name: string;
@@ -15,13 +16,13 @@ export function useUser() {
 
   const fetchUserData = async () => {
     try {
-      //   const response = await axios.get(`${API_URL}/users/${userId}`, {
-      //     headers: { Authorization: `Bearer ${token}` },
-      //   });
-      //   setUser(response.data);
+      // const response = await axios.get(`${API_URL}/users/${userId}`, {
+      //   headers: { Authorization: `Bearer ${token}` },
+      // });
+      // setUser(response.data);
       setUser({
         name: 'John Snow',
-        email: 'jhonsnow@email.com',
+        email: 'johnsnow@email.com',
         imageUrl:
           'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png',
       });
