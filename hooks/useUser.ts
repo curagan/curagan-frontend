@@ -35,5 +35,5 @@ export function useUser() {
     fetchUserData();
   }, []);
 
-  return { user };
+  return { user, setUser };
 }
