@@ -12,13 +12,13 @@ const UserAccount: NextPage = () => {
       <div className="flex flex-col gap-4 px-4 py-4">
         <div className="text-center my-4">
           <img
-            className="inline-block h-20 w-20 rounded-full ring-2 ring-white dark:ring-zinc-500"
+            className="inline-block h-28 w-28 rounded-full ring-1 ring-neutral-500"
             src={user.imageUrl}
             alt="Profile picture"
           />
         </div>
 
-        <div className="border-b-2">
+        <div className="border-b-2 border-neutral-200">
           <div className="mb-2">
             <div>E-Mail:</div>
             <div className="font-bold">{user.email}</div>
