@@ -9,7 +9,7 @@ const UserAccount: NextPage = () => {
 
   return (
     <LayoutWrapper>
-      <div className="flex flex-col px-4 py-4">
+      <div className="flex flex-col gap-4 px-4 py-4">
         <div className="text-center my-4">
           <img
             className="inline-block h-20 w-20 rounded-full ring-2 ring-white dark:ring-zinc-500"
@@ -18,15 +18,15 @@ const UserAccount: NextPage = () => {
           />
         </div>
 
-        <div className="my-4 border-b-2">
-          <div className="my-2">
+        <div className="border-b-2">
+          <div className="mb-2">
             <div>E-Mail:</div>
-            <div className="font-semibold">{user.email}</div>
+            <div className="font-bold">{user.email}</div>
           </div>
 
-          <div className="my-2">
+          <div className="mb-2">
             <div>Name:</div>
-            <div className="font-semibold">{user.name}</div>
+            <div className="font-bold">{user.name}</div>
           </div>
         </div>
 
