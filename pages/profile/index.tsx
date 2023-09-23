@@ -8,24 +8,30 @@ export default function Profile() {
   console.log('render', user);
 
   return (
-    <>
-      <img
-        className="inline-block h-20 w-20 rounded-full ring-2 ring-white dark:ring-zinc-500"
-        src={user.imageUrl}
-        alt="Profile picture"
-      />
+    <div className="flex flex-col px-8 py-8">
+      <div className="text-center my-4">
+        <img
+          className="inline-block h-20 w-20 rounded-full ring-2 ring-white dark:ring-zinc-500"
+          src={user.imageUrl}
+          alt="Profile picture"
+        />
+      </div>
 
-      <div>
-        <div>E-Mail:</div>
-        <div>{user.email}</div>
+      <div className="my-4 border-b-2">
+        <div className="my-2">
+          <div>E-Mail:</div>
+          <div className="font-semibold">{user.email}</div>
+        </div>
+
+        <div className="my-2">
+          <div>Name:</div>
+          <div className="font-semibold">{user.name}</div>
+        </div>
       </div>
 
       <div>
-        <div>Name:</div>
-        <div>{user.name}</div>
+        <Button text="Ganti Password" />
       </div>
-
-      <Button text="Ganti Password" />
-    </>
+    </div>
   );
 }
