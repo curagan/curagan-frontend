@@ -1,20 +1,21 @@
 import { NextPage } from 'next';
 import Head from 'next/head';
-import Button from '../components/Button';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 const Index: NextPage = () => {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.push('/beranda');
+  }, []);
+
   return (
     <>
       <Head>
-        <title>curagan</title>
+        <title>Curagan</title>
         <meta name="description" content="curagan" />
       </Head>
-      <div className="flex flex-col justify-center items-center h-screen space-y-4">
-        <h1 className="text-8xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
-          Hello World
-        </h1>
-        <Button text="Click Me!" onClick={() => alert('Button Clicked!')} />
-      </div>
     </>
   );
 };
