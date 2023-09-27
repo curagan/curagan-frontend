@@ -7,18 +7,18 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { useState } from 'react';
-import { API_LOGIN } from '@/lib/ApiLinks';
+import { API_LOGIN_PATIENT, API_LOGIN_DOCTOR } from '@/lib/ApiLinks';
 import { useRouter } from 'next/router';
 
 const Login: NextPage = () => {
   const [disableSubmit, setDisableSubmit] = useState(false);
-
   const router = useRouter();
 
   // Yup & react hook form setup
   const schema = yup.object({
-    email: yup.string().email('Invalid email').required('Email required'),
-    password: yup.string().required('Password required'),
+    email: yup.string().email('Email tidak valid').required('Email diperlukan'),
+    password: yup.string().required('Password diperlukan'),
+    isDoctor: yup.boolean(),
   });
   const {
     register,
@@ -28,6 +28,7 @@ const Login: NextPage = () => {
     values: {
       email: '',
       password: '',
+      isDoctor: false,
     },
     resolver: yupResolver(schema),
     mode: 'onTouched',
@@ -37,14 +38,35 @@ const Login: NextPage = () => {
   const onSubmit = async (formData: any) => {
     try {
       setDisableSubmit(true);
-      const response = await axios.post(API_LOGIN, formData);
 
-      localStorage.setItem('token', response.data.access_token);
-      localStorage.setItem('role', response.data.response.role);
+      // Login as Doctor
+      if (formData.isDoctor) {
+        const response = await axios.post(API_LOGIN_DOCTOR, {
+          email: formData.email,
+          password: formData.password,
+        });
 
-      router.push('/beranda');
+        localStorage.setItem('token', response.data.access_token);
+        localStorage.setItem('role', response.data.role);
+        localStorage.setItem('doctorId', response.data.id);
+
+        router.push('/beranda');
+      } else {
+        // Login as Patient
+        const response = await axios.post(API_LOGIN_PATIENT, {
+          email: formData.email,
+          password: formData.password,
+        });
+
+        localStorage.setItem('token', response.data.access_token);
+        localStorage.setItem('role', response.data.response.role);
+        localStorage.setItem('user', JSON.stringify(response.data.response));
+
+        router.push('/beranda');
+      }
     } catch (error) {
       setDisableSubmit(false);
+      console.log('ERROR: ', error);
       // throw new Error('Failed to login');
     }
   };
@@ -109,6 +131,13 @@ const Login: NextPage = () => {
               <span className="text-sm text-red-600">
                 {errors.password?.message?.toString()}
               </span>
+            </div>
+
+            <div className="flex flex-row-reverse items-center justify-end gap-2">
+              <label htmlFor="asDoctor" className="text-sm">
+                Masuk sebagai dokter
+              </label>
+              <input type="checkbox" className="" {...register('isDoctor')} />
             </div>
 
             {disableSubmit ? (
