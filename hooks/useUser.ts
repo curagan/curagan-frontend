@@ -1,33 +1,32 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { API_PATIENT } from '@/lib/ApiLinks';
 
 interface User {
   name: string;
   email: string;
-  imageUrl: string;
+  imageURL: string;
 }
 
 export function useUser() {
   const [user, setUser] = useState<User>({
     name: '',
     email: '',
-    imageUrl: '',
+    imageURL: '',
   });
 
   const fetchUserData = async () => {
+    const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userId');
+
     try {
-      // const response = await axios.get(`${API_URL}/users/${userId}`, {
-      //   headers: { Authorization: `Bearer ${token}` },
-      // });
-      // setUser(response.data);
-      setUser({
-        name: 'John Snow',
-        email: 'johnsnow@email.com',
-        imageUrl:
-          'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png',
+      const response = await axios.get(`${API_PATIENT}/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
       });
+
+      setUser(response.data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 

@@ -59,8 +59,8 @@ const Login: NextPage = () => {
         });
 
         localStorage.setItem('token', response.data.access_token);
-        localStorage.setItem('role', response.data.response.role);
-        localStorage.setItem('user', JSON.stringify(response.data.response));
+        localStorage.setItem('role', response.data.role);
+        localStorage.setItem('userId', response.data.id);
 
         router.push('/beranda');
       }

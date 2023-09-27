@@ -4,3 +4,6 @@ export const API_LOGIN_PATIENT =
   'https://curagan-api.nikenhpsr.site/patient/auth/login';
 export const API_LOGIN_DOCTOR =
   'https://curagan-api.nikenhpsr.site/doctor/auth/login';
+
+export const API_PATIENT = 'https://curagan-api.nikenhpsr.site/patient';
+export const API_DOCTOR = 'https://curagan-api.nikenhpsr.site/doctor';
