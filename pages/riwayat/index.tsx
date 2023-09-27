@@ -7,7 +7,7 @@ import { NextPage } from 'next';
 const Home: NextPage = () => {
   return (
     <LayoutWrapper>
-      <div className="w-full flex flex-col gap-4 p-3 pb-0  bg-slate-100">
+      <div className="w-full flex flex-col gap-4 p-3 pb-0 ">
         <Title />
         <Filters />
         <HistoryList />
