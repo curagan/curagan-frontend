@@ -5,24 +5,25 @@ import { API_PATIENT } from '@/lib/ApiLinks';
 interface User {
   name: string;
   email: string;
-  imageUrl: string;
+  imageURL: string;
 }
 
 export function useUser() {
   const [user, setUser] = useState<User>({
     name: '',
     email: '',
-    imageUrl: '',
+    imageURL: '',
   });
 
   const fetchUserData = async () => {
     const token = localStorage.getItem('token');
-    const userId = '9d464306-9955-4f68-a2a7-a23d4a2fcd45';
+    const userId = '93bd773c-2887-4c0f-99eb-66bd9acf39a8';
 
     try {
       const response = await axios.get(`${API_PATIENT}/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+      console.log(response.data);
       setUser(response.data);
       // setUser({
       //   name: 'John Snow',

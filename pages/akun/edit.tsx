@@ -11,7 +11,7 @@ const AccountEdit: NextPage = () => {
       <UserProfileEdit
         name={user.name}
         email={user.email}
-        imageUrl={user.imageUrl}
+        imageURL={user.imageURL}
       />
     </LayoutWrapper>
   );
