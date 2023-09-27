@@ -1,0 +1,29 @@
+<div>
+  <h1>Registration</h1>
+  <form onSubmit="{handleSubmit(onSubmit)}">
+    {/* Registration form fields */}
+    <div>
+      <label htmlFor="name">Name</label>
+      <input type="text" {...register('name')} />
+      <span>{errors.name?.message}</span>
+    </div>
+    <div>
+      <label htmlFor="email">Email</label>
+      <input type="email" {...register('email')} />
+      <span>{errors.email?.message}</span>
+    </div>
+    <div>
+      <label htmlFor="password">Password</label>
+      <input type="password" {...register('password')} />
+      <span>{errors.password?.message}</span>
+    </div>
+    <div>
+      <label htmlFor="imageURL">Image URL</label>
+      <input type="text" {...register('imageURL')} />
+      <span>{errors.imageURL?.message}</span>
+    </div>
+    <div>
+      <button type="submit">Register</button>
+    </div>
+  </form>
+</div>
