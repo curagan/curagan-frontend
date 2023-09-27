@@ -1,12 +1,18 @@
+import UserProfileEdit from '@/components/akun/UserProfileEdit';
 import { LayoutWrapper } from '@/components/layout/LayoutWrapper';
+import { useUser } from '@/hooks/useUser';
 import { NextPage } from 'next';
 
 const AccountEdit: NextPage = () => {
+  const { user } = useUser();
+
   return (
     <LayoutWrapper>
-      <div className="flex flex-col gap-4">
-        <h1>akun/edit</h1>
-      </div>
+      <UserProfileEdit
+        name={user.name}
+        email={user.email}
+        imageUrl={user.imageUrl}
+      />
     </LayoutWrapper>
   );
 };
