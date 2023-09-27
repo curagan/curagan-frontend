@@ -17,20 +17,14 @@ export function useUser() {
 
   const fetchUserData = async () => {
     const token = localStorage.getItem('token');
-    const userId = '93bd773c-2887-4c0f-99eb-66bd9acf39a8';
+    const userId = localStorage.getItem('userId');
 
     try {
       const response = await axios.get(`${API_PATIENT}/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      console.log(response.data);
+
       setUser(response.data);
-      // setUser({
-      //   name: 'John Snow',
-      //   email: 'johnsnow@email.com',
-      //   imageUrl:
-      //     'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png',
-      // });
     } catch (error) {
       console.log(error);
     }

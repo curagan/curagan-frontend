@@ -43,14 +43,17 @@ const UserProfileEdit = ({ name, email, imageURL }: UserProfileProps) => {
   //const token = '9d464306-9955-4f68-a2a7-a23d4a2fcd45';
 
   const onSubmit = async (formData: any) => {
-    const id = '93bd773c-2887-4c0f-99eb-66bd9acf39a8';
+    //const id = '93bd773c-2887-4c0f-99eb-66bd9acf39a8';
     const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userId');
+
     console.log('submited');
     console.log(formData);
 
     try {
       setDisableSubmit(true);
-      await axios.patch(`${API_PATIENT}/${id}`, formData, {
+      console.log('update', formData);
+      await axios.put(`${API_PATIENT}/${userId}`, formData, {
         headers: { Authorization: `Bearer ${token}` },
       });
       router.push('/akun');
@@ -89,6 +92,7 @@ const UserProfileEdit = ({ name, email, imageURL }: UserProfileProps) => {
             <label htmlFor="name">Nama:</label>
             <input
               className="w-full p-3 py-2 rounded-md border border-gray-400"
+              placeholder="Nama"
               {...register('name')}
             />
 
@@ -101,6 +105,7 @@ const UserProfileEdit = ({ name, email, imageURL }: UserProfileProps) => {
           </div>
           <div className="mb-2">
             <button
+              type="button"
               className="w-16 h-8 bg-red-500 hover:bg-red-700 rounded-[3px] text-white mr-2"
               onClick={() => {
                 router.push('/akun');
@@ -123,10 +128,18 @@ const UserProfileEdit = ({ name, email, imageURL }: UserProfileProps) => {
         <form>
           <div className="flex flex-col gap-1 mb-1.5">
             <label htmlFor="oldPassword">Password lama:</label>
-            <input className="w-full p-3 py-2 rounded-md border border-gray-400" />
+            <input
+              className="w-full p-3 py-2 rounded-md border border-gray-400"
+              type="password"
+              placeholder="******"
+            />
 
             <label htmlFor="newPassword">Password baru:</label>
-            <input className="w-full p-3 py-2 rounded-md border border-gray-400" />
+            <input
+              className="w-full p-3 py-2 rounded-md border border-gray-400"
+              type="password"
+              placeholder="******"
+            />
           </div>
 
           <div className="mb-2">
