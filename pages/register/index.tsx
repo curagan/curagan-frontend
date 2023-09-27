@@ -3,8 +3,8 @@ import axios from 'axios';
 import { NextPage } from 'next';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import { API_REGISTER } from '@/lib/ApiLinks';
-import router from 'next/router';
+import { API_REGISTER_PATIENT } from '@/lib/ApiLinks';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Image from 'next/image';
 import imgLogo from '@/public/icons/logo.png';
@@ -12,26 +12,35 @@ import { useState } from 'react';
 
 const Registration: NextPage = () => {
   const [disableSubmit, setDisableSubmit] = useState(false);
+  const router = useRouter();
+
+  // Yup & react hook form setup
 
   const schema = yup.object({
-    name: yup.string().required('Name required'),
-    email: yup.string().email('Invalid email').required('Email required'),
-    password: yup.string().required('Password required'),
-    imageURL: yup.string().required('Image URL required'),
+    name: yup.string().required('Nama diperlukan'),
+    email: yup.string().email('Email tidak valid').required('Email diperlukan'),
+    password: yup.string().required('Password diperlukan'),
+    imageURL: yup.string(),
   });
-
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({
+    values: {
+      email: '',
+      password: '',
+      name: '',
+      imageURL: '',
+    },
     resolver: yupResolver(schema),
   });
 
+  // Handle submit
   const onSubmit = async (formData: any) => {
     try {
       setDisableSubmit(true);
-      const response = await axios.post(API_REGISTER, formData);
+      const response = await axios.post(API_REGISTER_PATIENT, formData);
 
       console.log('Registration success: ', response.data);
       router.push('/login');
@@ -105,7 +114,7 @@ const Registration: NextPage = () => {
               <label htmlFor="name">Nama</label>
               <input
                 type="text"
-                placeholder="Nama anda"
+                placeholder="cth. Budi"
                 className="w-full p-3 py-2 rounded-md border border-gray-400"
                 {...register('name')}
               />
@@ -115,17 +124,16 @@ const Registration: NextPage = () => {
             </div>
 
             <div className="flex flex-col gap-1">
-              <label htmlFor="imageURL">Foto Profil</label>
+              <label htmlFor="imageURL">Foto Profil*</label>
               <input
                 type="text"
-                placeholder="Url foto profil"
+                placeholder="https://www.linkgambaranda.com/1"
                 className="w-full p-3 py-2 rounded-md border border-gray-400"
                 {...register('imageURL')}
               />
-              <span className="text-sm text-red-600">
-                {errors.imageURL?.message?.toString()}
-              </span>
             </div>
+
+            <span className="text-sm italic">* optional</span>
 
             {disableSubmit ? (
               <button
