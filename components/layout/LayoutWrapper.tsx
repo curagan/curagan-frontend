@@ -5,8 +5,12 @@ import imgHome from '@/public/icons/home.png';
 import imgSearch from '@/public/icons/search.png';
 import imgAppointment from '@/public/icons/appointment-history.png';
 import imgAccount from '@/public/icons/avatar.png';
+import { LayoutMenu } from './LayoutMenu';
+import { useState } from 'react';
 
 export const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
+  const [displayMenu, setDisplayMenu] = useState(false);
+
   return (
     <div className="absolute w-full h-full flex flex-col items-center">
       <header className="w-full flex items-center justify-center bg-slate-200">
@@ -25,6 +29,8 @@ export const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
       </main>
 
       <footer className="w-full flex items-center justify-center bg-slate-200">
+        {displayMenu ? <LayoutMenu /> : ''}
+
         <nav className="relative w-full max-w-md flex items-stretch justify-between text-sm text-center overflow-x-auto text-[#13629D]">
           <LayoutLink name="Beranda" href="/beranda" src={imgHome} />
           <LayoutLink name="Pencarian" href="/pencarian" src={imgSearch} />
@@ -33,7 +39,17 @@ export const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
             href="/riwayat"
             src={imgAppointment}
           />
-          <LayoutLink name="Akun" href="/akun" src={imgAccount} />
+
+          {/* Menu button */}
+          <button
+            onClick={() => setDisplayMenu((prev) => !prev)}
+            className="w-[78px] max-w-[78px] flex flex-col items-center justify-start gap-1 p-2 hover:bg-slate-300 transition-all"
+          >
+            <div className="w-10 h-10 rounded-full">
+              <Image src={imgAccount} alt={'menu'} className="object-contain" />
+            </div>
+            <span>Menu</span>
+          </button>
         </nav>
       </footer>
     </div>
