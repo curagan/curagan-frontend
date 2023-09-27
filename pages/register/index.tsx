@@ -50,7 +50,7 @@ const Registration: NextPage = () => {
               <span>Kembali</span>
             </Link>
             <Link
-              href={'/register'}
+              href={'/login'}
               className="rounded-md p-2 bg-slate-900 text-white"
             >
               <span>Masuk</span>
