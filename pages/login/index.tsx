@@ -57,7 +57,6 @@ const Login: NextPage = () => {
           email: formData.email,
           password: formData.password,
         });
-        console.log(response.data);
 
         localStorage.setItem('token', response.data.access_token);
         localStorage.setItem('role', response.data.role);

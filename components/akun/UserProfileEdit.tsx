@@ -47,19 +47,15 @@ const UserProfileEdit = ({ name, email, imageURL }: UserProfileProps) => {
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
 
-    console.log('submited');
-    console.log(formData);
-
     try {
       setDisableSubmit(true);
-      console.log('update', formData);
       await axios.put(`${API_PATIENT}/${userId}`, formData, {
         headers: { Authorization: `Bearer ${token}` },
       });
       router.push('/akun');
     } catch (error) {
       setDisableSubmit(false);
-      console.log(error);
+      console.error(error);
     }
   };
 

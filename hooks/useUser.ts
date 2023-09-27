@@ -26,7 +26,7 @@ export function useUser() {
 
       setUser(response.data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
