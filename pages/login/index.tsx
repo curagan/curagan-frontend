@@ -47,26 +47,26 @@ const Login: NextPage = () => {
         });
 
         localStorage.setItem('token', response.data.access_token);
-        localStorage.setItem('role', response.data.response.role);
-        localStorage.setItem('doctorId', response.data.response.id);
+        localStorage.setItem('role', response.data.role);
+        localStorage.setItem('doctorId', response.data.id);
 
         router.push('/beranda');
-        return;
+      } else {
+        // Login as Patient
+        const response = await axios.post(API_LOGIN_PATIENT, {
+          email: formData.email,
+          password: formData.password,
+        });
+
+        localStorage.setItem('token', response.data.access_token);
+        localStorage.setItem('role', response.data.response.role);
+        localStorage.setItem('user', JSON.stringify(response.data.response));
+
+        router.push('/beranda');
       }
-
-      // Login as Patient
-      const response = await axios.post(API_LOGIN_PATIENT, {
-        email: formData.email,
-        password: formData.password,
-      });
-
-      localStorage.setItem('token', response.data.access_token);
-      localStorage.setItem('role', response.data.response.role);
-      localStorage.setItem('user', JSON.stringify(response.data.response));
-
-      router.push('/beranda');
     } catch (error) {
       setDisableSubmit(false);
+      console.log('ERROR: ', error);
       // throw new Error('Failed to login');
     }
   };
