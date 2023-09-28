@@ -1,12 +1,23 @@
+import { API_DOCTOR } from '@/lib/ApiLinks';
+import axios from 'axios';
+import Link from 'next/link';
+import useSWR from 'swr';
+
+interface IDoctorDetails {
+  id: string;
+  email: string;
+  specialization: string;
+  name: string;
+  role: string;
+  imageURL: string;
+  location: string;
+  hospital: string;
+  schedule: null | any;
+}
+
 export const DoctorList = () => {
-  const doctors = [
-    'Dr. Viska Anastashia',
-    'dr. Alfa Sylvestris, Sp.M',
-    'Dr. Chandra Megah',
-    'dr. Agung Saputro',
-    'dr. Ahriani Achmad, Sp.M',
-    'dr. Aiza Fitria',
-  ];
+  const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+  const { data, isLoading, error } = useSWR(API_DOCTOR, fetcher);
 
   return (
     <div className="w-full flex flex-col gap-2">
@@ -17,22 +28,32 @@ export const DoctorList = () => {
             Berbagai pilihan dokter yang siap melayani
           </p>
         </div>
-        <button className="w-fit px-2 py-1 rounded text-sm bg-blue-600 text-white">
+        <Link
+          href={'/pencarian'}
+          className="w-fit px-2 py-1 rounded text-sm bg-blue-600 text-white"
+        >
           Lihat Semua
-        </button>
+        </Link>
       </div>
 
       <div className="overflow-x-auto overflow-y-clip">
-        <div className="min-w-full w-[970px] h-44 flex flex-wrap items-start gap-3">
-          {doctors.map((doctor) => (
-            <div
-              key={doctor}
-              className="w-[230px] h-[78px] flex items-center gap-3 p-2 border rounded-md"
-            >
-              <div className="w-14 h-14 min-w-fit rounded-full bg-gray-600"></div>
-              <span className="w-3/5 line-clamp-2 text-sm">{doctor}</span>
-            </div>
-          ))}
+        <div className="min-w-max max-w-[970px] h-44 flex flex-wrap items-start gap-3">
+          {isLoading ? (
+            <span>Loading...</span>
+          ) : (
+            data.map((doctor: IDoctorDetails) => (
+              <Link
+                key={doctor.id}
+                href={`/appointment/${doctor.id}`}
+                className="w-[230px] h-[78px] flex items-center gap-3 p-2 border rounded-md"
+              >
+                <div className="w-14 h-14 min-w-fit rounded-full bg-gray-600"></div>
+                <span className="w-3/5 line-clamp-2 text-sm">
+                  {doctor.name}
+                </span>
+              </Link>
+            ))
+          )}
         </div>
       </div>
     </div>
