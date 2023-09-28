@@ -3,12 +3,12 @@ import axios from 'axios';
 import CalendarComponent from '../../components/jadwal/CalendarComponent';
 import { useEffect, useState } from 'react';
 
+// Standardized Schedule type
 type Schedule = {
-  days: string;
   date: string;
   month: string;
   year: string;
-  time: string[];
+  time: string;
 };
 
 type Doctor = {

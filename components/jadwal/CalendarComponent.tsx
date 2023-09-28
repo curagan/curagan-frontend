@@ -36,14 +36,16 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ schedule }) => {
   const [calendarDays, setCalendarDays] = useState<Date[]>([]);
   const [filteredSchedules, setFilteredSchedules] = useState<Schedule[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { control, handleSubmit, errors } = useForm<Schedule>({
+  const { control, handleSubmit, errors, getValues } = useForm<Schedule>({
     resolver: yupResolver(validationSchema),
   }) as any;
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const handleFormSubmit: SubmitHandler<Schedule> = async (formData) => {
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = getValues();
     console.log('Submitting form with data:', formData);
 
     console.log('Directly from local storage:', localStorage.getItem('token'));
@@ -53,8 +55,6 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ schedule }) => {
       const token = localStorage.getItem('token');
 
       if (!token) {
-        console.log('No token found. Redirecting to login...');
-
         return;
       }
 
@@ -65,9 +65,6 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ schedule }) => {
         },
       };
 
-      console.log('Config headers:', config.headers);
-      console.log('Form data to send:', { schedule: [formData] });
-
       const response = await axios.put(
         `https://curagan-api.nikenhpsr.site/doctor/${doctorId}`,
         {
@@ -76,30 +73,15 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ schedule }) => {
         config,
       );
 
-      console.log('API response:', response);
-
       if (response.status === 200) {
         console.log('Schedule added successfully');
+        setFilteredSchedules([...filteredSchedules, formData]);
+
         closeModal();
       }
     } catch (error: any) {
       console.log('Error updating schedule:', error.message);
     }
-  };
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('About to submit');
-
-    const formData: Schedule = {
-      date: '02',
-      month: '09',
-      year: '2023',
-      time: '09.00',
-    };
-
-    await handleFormSubmit(formData);
-
-    console.log('Submission function should have been called');
   };
 
   useEffect(() => {
@@ -151,12 +133,7 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ schedule }) => {
             >
               &times;
             </span>
-            <form
-              onSubmit={(e) => {
-                console.log('Form submitted!');
-                handleSubmit(handleFormSubmit)(e);
-              }}
-            >
+            <form onSubmit={handleFormSubmit}>
               <label>
                 Day:
                 <Controller
