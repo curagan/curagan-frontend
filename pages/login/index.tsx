@@ -48,7 +48,8 @@ const Login: NextPage = () => {
 
         localStorage.setItem('token', response.data.access_token);
         localStorage.setItem('role', response.data.role);
-        localStorage.setItem('doctorId', response.data.id);
+        localStorage.setItem('userId', response.data.id);
+        localStorage.setItem('doctorId', response.data.id); // rmv if not used ?
 
         router.push('/beranda');
       } else {

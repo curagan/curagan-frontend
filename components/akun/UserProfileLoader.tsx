@@ -11,17 +11,19 @@ const UserProfileLoader = () => {
       <div className="border-b-2 border-neutral-200">
         <div className="mb-2">
           <div>E-Mail:</div>
-          <Skeleton className="h-8 w-full" />
+          <Skeleton className="h-6 w-full" />
         </div>
 
         <div className="mb-2">
           <div>Name:</div>
-          <Skeleton className="h-8 w-full" />
+          <Skeleton className="h-6 w-full" />
         </div>
       </div>
 
       <div>
-        <Button text="Ganti Password" />
+        <button className="w-28 h-8 bg-blue-500 rounded-[3px] text-white mr-2">
+          Ubah Profil
+        </button>
       </div>
     </div>
   );

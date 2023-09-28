@@ -2,7 +2,7 @@ import Button from '../Button';
 import { FileEdit } from 'lucide-react';
 import axios from 'axios';
 import * as yup from 'yup';
-import { API_PATIENT } from '@/lib/ApiLinks';
+import { API_DOCTOR, API_PATIENT } from '@/lib/ApiLinks';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
@@ -13,17 +13,25 @@ interface UserProfileProps {
   name: string;
   email: string;
   imageURL: string;
+  hospital?: string;
 }
 
 type FormValues = {
   name: string;
+  hospital?: string;
 };
 
 const schema = yup.object({
   name: yup.string().required('Nama tidak boleh kosong'),
+  hospital: yup.string(),
 });
 
-const UserProfileEdit = ({ name, email, imageURL }: UserProfileProps) => {
+const UserProfileEdit = ({
+  name,
+  email,
+  imageURL,
+  hospital,
+}: UserProfileProps) => {
   const [disableSubmit, setDisableSubmit] = useState(false);
 
   const router = useRouter();
@@ -35,21 +43,25 @@ const UserProfileEdit = ({ name, email, imageURL }: UserProfileProps) => {
   } = useForm<FormValues>({
     values: {
       name: name,
+      hospital: hospital,
     },
     resolver: yupResolver(schema),
     mode: 'onTouched',
   });
 
-  //const token = '9d464306-9955-4f68-a2a7-a23d4a2fcd45';
-
   const onSubmit = async (formData: any) => {
-    //const id = '93bd773c-2887-4c0f-99eb-66bd9acf39a8';
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
+    const role = localStorage.getItem('role');
+
+    let API = API_PATIENT;
+    if (role == 'doctor') {
+      API = API_DOCTOR;
+    }
 
     try {
       setDisableSubmit(true);
-      await axios.put(`${API_PATIENT}/${userId}`, formData, {
+      await axios.put(`${API}/${userId}`, formData, {
         headers: { Authorization: `Bearer ${token}` },
       });
       router.push('/akun');
@@ -98,7 +110,26 @@ const UserProfileEdit = ({ name, email, imageURL }: UserProfileProps) => {
                 {errors.name.message}
               </span>
             )}
+
+            {hospital && (
+              <>
+                <label htmlFor="hospital">Rumah Sakit:</label>
+                <input
+                  className="w-full p-3 py-2 rounded-md border border-gray-400"
+                  placeholder="Rumah Sakit"
+                  {...register('hospital')}
+                />
+
+                {/* {errors.name?.message?.toString()} */}
+                {errors.hospital && (
+                  <span className="text-sm text-red-600">
+                    {errors.hospital.message}
+                  </span>
+                )}
+              </>
+            )}
           </div>
+
           <div className="mb-2">
             <button
               type="button"
