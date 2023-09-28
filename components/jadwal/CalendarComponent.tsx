@@ -12,6 +12,7 @@ import {
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { API_DOCTOR } from '../../lib/ApiLinks';
 
 type Schedule = {
   date: string;
@@ -36,47 +37,70 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ schedule }) => {
   const [calendarDays, setCalendarDays] = useState<Date[]>([]);
   const [filteredSchedules, setFilteredSchedules] = useState<Schedule[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { control, handleSubmit, errors, getValues } = useForm<Schedule>({
+  const { control, handleSubmit, errors } = useForm<Schedule>({
     resolver: yupResolver(validationSchema),
   }) as any;
+
+  const fetchDataFromAPI = async () => {
+    const doctorId = localStorage.getItem('doctorId');
+    const token = localStorage.getItem('token');
+    if (!doctorId || !token) {
+      console.log('Missing doctorId or token');
+      return;
+    }
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      const response = await axios.get(`${API_DOCTOR}/${doctorId}`, config);
+      const scheduleData = JSON.parse(response.data.schedule);
+      setFilteredSchedules(scheduleData);
+    } catch (error: any) {
+      console.log('Error fetching schedule:', error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchDataFromAPI();
+  }, []);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = getValues();
-    console.log('Submitting form with data:', formData);
+  const handleFormSubmit: SubmitHandler<Schedule> = async (data: Schedule) => {
+    const doctorId = localStorage.getItem('doctorId');
+    const token = localStorage.getItem('token');
 
-    console.log('Directly from local storage:', localStorage.getItem('token'));
+    if (!doctorId || !token) {
+      console.log('Missing doctorId or token');
+      return;
+    }
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    };
+
+    // Combining existing schedules with new one
+    const existingSchedules = [...(filteredSchedules ?? [])];
+    existingSchedules.push(data);
 
     try {
-      const doctorId = 'b6686826-c1f3-468a-90d0-21948f711b74';
-      const token = localStorage.getItem('token');
-
-      if (!token) {
-        return;
-      }
-
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      };
-
       const response = await axios.put(
-        `https://curagan-api.nikenhpsr.site/doctor/${doctorId}`,
-        {
-          schedule: [formData],
-        },
+        `${API_DOCTOR}/${doctorId}`,
+        { schedule: existingSchedules },
         config,
       );
 
       if (response.status === 200) {
         console.log('Schedule added successfully');
-        setFilteredSchedules([...filteredSchedules, formData]);
-
+        setFilteredSchedules(existingSchedules);
         closeModal();
       }
     } catch (error: any) {
@@ -88,14 +112,7 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ schedule }) => {
     const start = startOfMonth(currentDate);
     const end = endOfMonth(currentDate);
     setCalendarDays(eachDayOfInterval({ start, end }));
-
-    const thisMonthSchedules = schedule.filter(
-      (item) =>
-        parseInt(item.month) === currentDate.getMonth() + 1 &&
-        parseInt(item.year) === currentDate.getFullYear(),
-    );
-    setFilteredSchedules(thisMonthSchedules);
-  }, [currentDate, schedule]);
+  }, [currentDate]);
 
   const nextMonth = () => setCurrentDate(addMonths(currentDate, 1));
   const prevMonth = () => setCurrentDate(subMonths(currentDate, 1));
@@ -133,7 +150,7 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ schedule }) => {
             >
               &times;
             </span>
-            <form onSubmit={handleFormSubmit}>
+            <form onSubmit={handleSubmit(handleFormSubmit)}>
               <label>
                 Day:
                 <Controller
@@ -221,9 +238,12 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ schedule }) => {
 
       <div className="grid grid-cols-7 gap-4">
         {calendarDays.map((day, index) => {
-          const isScheduled = filteredSchedules.some(
-            (item) => parseInt(item.date) === day.getDate(),
-          );
+          const isScheduled = Array.isArray(filteredSchedules)
+            ? filteredSchedules.some(
+                (item) => parseInt(item.date) === day.getDate(),
+              )
+            : false;
+
           return (
             <div
               key={index}
