@@ -1,17 +1,20 @@
 import Link from 'next/link';
 import { MenuLink } from './MenuLink';
+import { useRouter } from 'next/router';
 
 export const LayoutMenu = () => {
+  const router = useRouter();
+
   const doesRoleExist = localStorage.getItem('role') !== null;
   const role = localStorage.getItem('role');
 
   const handleLogout = () => {
-    localStorage.removeItem('doctorId');
     localStorage.removeItem('token');
     localStorage.removeItem('role');
-    localStorage.removeItem('user');
+    localStorage.removeItem('doctorId');
+    localStorage.removeItem('userId');
 
-    window.location.reload();
+    router.push('/beranda');
   };
 
   return (
