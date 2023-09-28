@@ -5,17 +5,25 @@ import { NextPage } from 'next';
 import axios from 'axios';
 import useSWR from 'swr';
 import { API_DOCTOR } from '@/lib/ApiLinks';
+import { useRouter } from 'next/router';
 
 const Pencarian: NextPage = () => {
+  const router = useRouter();
+  const query = router.query.slug as string;
+  const param = query !== undefined ? query.replace(' ', '%20') : '';
+
   const fetcher = (url: string) => axios.get(url).then((res) => res.data);
-  const { data, isLoading, error } = useSWR(API_DOCTOR, fetcher);
+  const { data, isLoading, error } = useSWR(
+    `${API_DOCTOR}/query?name=${param}`,
+    fetcher,
+  );
 
   return (
     <LayoutWrapper>
       <div className="w-full flex flex-col gap-4 p-3 pb-0">
         <SearchBar />
 
-        <span className="font-medium">Menampilkan semua dokter</span>
+        <span className="font-medium">{`Hasil pencarian: ${query}`}</span>
 
         <div className="w-full flex flex-col gap-3">
           {isLoading ? (
