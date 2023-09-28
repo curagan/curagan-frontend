@@ -1,7 +1,9 @@
 import { API_DOCTOR } from '@/lib/ApiLinks';
 import axios from 'axios';
+import Image from 'next/image';
 import Link from 'next/link';
 import useSWR from 'swr';
+import imgDoctorAvatar from '@/public/icons/doctor-avatar.png';
 
 interface IDoctorDetails {
   id: string;
@@ -37,7 +39,7 @@ export const DoctorList = () => {
       </div>
 
       <div className="overflow-x-auto overflow-y-clip">
-        <div className="min-w-max max-w-[970px] h-44 flex flex-wrap items-start gap-3">
+        <div className="min-w-max max-w-[970px] h-20 flex flex-wrap items-start gap-3">
           {isLoading ? (
             <span>Loading...</span>
           ) : (
@@ -47,7 +49,14 @@ export const DoctorList = () => {
                 href={`/appointment/${doctor.id}`}
                 className="w-[230px] h-[78px] flex items-center gap-3 p-2 border rounded-md"
               >
-                <div className="w-14 h-14 min-w-fit rounded-full bg-gray-600"></div>
+                <div className="w-14 h-14 p-1">
+                  <Image
+                    src={imgDoctorAvatar}
+                    alt={doctor.name}
+                    className="object-contain"
+                  />
+                </div>
+
                 <span className="w-3/5 line-clamp-2 text-sm">
                   {doctor.name}
                 </span>
