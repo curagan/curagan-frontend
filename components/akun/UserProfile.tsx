@@ -6,9 +6,10 @@ interface UserProfileProps {
   name: string;
   email: string;
   imageURL: string;
+  hospital?: string;
 }
 
-const UserProfile = ({ name, email, imageURL }: UserProfileProps) => {
+const UserProfile = ({ name, email, imageURL, hospital }: UserProfileProps) => {
   const router = useRouter();
 
   return (
@@ -29,21 +30,31 @@ const UserProfile = ({ name, email, imageURL }: UserProfileProps) => {
 
         <div className="mb-2">
           <div>Nama:</div>
-          <div className="flex gap-2">
-            <div className="font-bold">{name}</div>
-            <FileEdit
+          <div className="font-bold">{name}</div>
+          {/* <FileEdit
               onClick={() => {
                 router.push('/akun/edit');
               }}
               className="cursor-pointer hover:bg-slate-200"
-            />
-          </div>
+            /> */}
         </div>
+
+        {hospital && (
+          <div className="mb-2">
+            <div>Rumah Sakit:</div>
+            <div className="font-bold">{hospital}</div>
+          </div>
+        )}
       </div>
 
       <div>
-        <button className="w-32 h-8 bg-blue-500 hover:bg-blue-700 rounded-[3px] text-white mr-2">
-          Ubah Password
+        <button
+          onClick={() => {
+            router.push('/akun/edit');
+          }}
+          className="w-28 h-8 bg-blue-500 hover:bg-blue-700 rounded-[3px] text-white mr-2"
+        >
+          Ubah Profil
         </button>
       </div>
     </div>

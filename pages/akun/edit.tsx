@@ -12,6 +12,7 @@ const AccountEdit: NextPage = () => {
         name={user.name}
         email={user.email}
         imageURL={user.imageURL}
+        hospital={user.hospital}
       />
     </LayoutWrapper>
   );

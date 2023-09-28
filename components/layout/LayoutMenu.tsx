@@ -10,6 +10,7 @@ export const LayoutMenu = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
     localStorage.removeItem('user');
+    localStorage.removeItem('userId');
 
     window.location.reload();
   };
