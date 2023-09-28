@@ -32,7 +32,7 @@ export const DoctorList = () => {
         </div>
         <Link
           href={'/pencarian'}
-          className="w-fit px-2 py-1 rounded text-sm bg-blue-600 text-white"
+          className="w-fit px-2 py-1 rounded text-sm bg-[#13629D] text-white"
         >
           Lihat Semua
         </Link>
