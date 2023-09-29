@@ -106,7 +106,7 @@ const UserProfileEdit = ({
               className="inline-block h-28 w-28 rounded-full ring-1 ring-neutral-500"
               color="#737373"
             />
-          ) : imageURL ? (
+          ) : name ? (
             <>
               <img
                 className="inline-block h-28 w-28 rounded-full ring-1 ring-neutral-500"
@@ -118,7 +118,7 @@ const UserProfileEdit = ({
           ) : (
             <Skeleton className="inline-block h-28 w-28 rounded-full" />
           )}
-          {imageURL && (
+          {name && (
             <div className="absolute bottom-2 right-40">
               <ImageUpload onSuccess={handleImageUploadSuccess} />
             </div>
