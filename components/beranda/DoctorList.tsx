@@ -4,6 +4,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import useSWR from 'swr';
 import imgDoctorAvatar from '@/public/icons/doctor-avatar.png';
+import { LoadingCard } from '../LoadingCard';
+import { useRouter } from 'next/router';
 
 interface IDoctorDetails {
   id: string;
@@ -18,6 +20,7 @@ interface IDoctorDetails {
 }
 
 export const DoctorList = () => {
+  const router = useRouter();
   const fetcher = (url: string) => axios.get(url).then((res) => res.data);
   const { data, isLoading, error } = useSWR(API_DOCTOR, fetcher);
 
@@ -41,12 +44,19 @@ export const DoctorList = () => {
       <div className="overflow-x-auto overflow-y-clip">
         <div className="min-w-max max-w-[970px] h-20 flex flex-wrap items-start gap-3">
           {isLoading ? (
-            <span>Loading...</span>
+            <LoadingCard />
           ) : (
             data.map((doctor: IDoctorDetails) => (
-              <Link
+              <button
                 key={doctor.id}
-                href={`/appointment/${doctor.id}`}
+                onClick={() => {
+                  if (localStorage.getItem('userId') == null) {
+                    router.push('/login');
+                    return;
+                  } else {
+                    router.push(`/appointment/${doctor.id}`);
+                  }
+                }}
                 className="w-[230px] h-[78px] flex items-center gap-3 p-2 border rounded-md"
               >
                 <div className="w-14 h-14 p-1">
@@ -57,10 +67,10 @@ export const DoctorList = () => {
                   />
                 </div>
 
-                <span className="w-3/5 line-clamp-2 text-sm">
+                <span className="w-3/5 line-clamp-2 text-sm text-left">
                   {doctor.name}
                 </span>
-              </Link>
+              </button>
             ))
           )}
         </div>
