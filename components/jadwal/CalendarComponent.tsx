@@ -205,13 +205,13 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ schedule }) => {
         </button>
       </div>
       <div className="grid grid-cols-7 gap-4">
-        <div className="text-red-500">Minggu</div>
-        <div>Senin</div>
-        <div>Selasa</div>
-        <div>Rabu</div>
-        <div>Kamis</div>
-        <div>Jumat</div>
-        <div>Sabtu</div>
+        <div className="text-red-500 font-medium">Minggu</div>
+        <div className="font-medium">Senin</div>
+        <div className="font-medium">Selasa</div>
+        <div className="font-medium">Rabu</div>
+        <div className="font-medium">Kamis</div>
+        <div className="font-medium">Jumat</div>
+        <div className="font-medium">Sabtu</div>
       </div>
       {isModalOpen && (
         <div
