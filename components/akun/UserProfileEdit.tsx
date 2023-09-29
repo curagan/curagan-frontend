@@ -38,6 +38,8 @@ const UserProfileEdit = ({
   setUser,
 }: UserProfileProps) => {
   const [disableSubmit, setDisableSubmit] = useState(false);
+  const [displaySuccessModal, setDisplaySuccessModal] = useState(false);
+  const [displayFailedModal, setDisplayFailedModal] = useState(false);
 
   const router = useRouter();
 
@@ -55,6 +57,8 @@ const UserProfileEdit = ({
   });
 
   const onSubmit = async (formData: any) => {
+    setDisableSubmit(true);
+
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
     const role = localStorage.getItem('role');
@@ -65,7 +69,6 @@ const UserProfileEdit = ({
     }
 
     try {
-      setDisableSubmit(true);
       await axios.put(
         `${API}/${userId}`,
         { ...formData, imageURL },
@@ -73,9 +76,9 @@ const UserProfileEdit = ({
           headers: { Authorization: `Bearer ${token}` },
         },
       );
-      router.push('/akun');
+      setDisplaySuccessModal(true);
     } catch (error) {
-      setDisableSubmit(false);
+      setDisplayFailedModal(true);
       console.error(error);
     }
   };
@@ -93,7 +96,7 @@ const UserProfileEdit = ({
         {imageURL ? (
           <div className="relative">
             <img
-              className="inline-block h-24 w-24 rounded-full ring-1 ring-neutral-500"
+              className="inline-block h-28 w-28 rounded-full ring-1 ring-neutral-500"
               src={imageURL}
               alt="Profile picture"
             />
@@ -125,7 +128,6 @@ const UserProfileEdit = ({
               {...register('name')}
             />
 
-            {/* {errors.name?.message?.toString()} */}
             {errors.name && (
               <span className="text-sm text-red-600">
                 {errors.name.message}
@@ -141,7 +143,6 @@ const UserProfileEdit = ({
                   {...register('hospital')}
                 />
 
-                {/* {errors.name?.message?.toString()} */}
                 {errors.hospital && (
                   <span className="text-sm text-red-600">
                     {errors.hospital.message}
@@ -172,9 +173,12 @@ const UserProfileEdit = ({
         </form>
       </div>
 
-      <FormChangePassword />
-      {/* <EditProfileSuccess />
-      <EditProfileFailed /> */}
+      <FormChangePassword
+        setDisplayFailedModal={setDisplayFailedModal}
+        setDisplaySuccessModal={setDisplaySuccessModal}
+      />
+      {displaySuccessModal && <EditProfileSuccess />}
+      {displayFailedModal && <EditProfileFailed />}
     </div>
   );
 };
