@@ -17,6 +17,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { API_DOCTOR } from '../../lib/ApiLinks';
 import TimeDropdown from '../jadwal/TimeDropdown';
+import { useRouter } from 'next/router';
 
 type Schedule = {
   date: string;
@@ -48,6 +49,7 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ schedule }) => {
     resolver: yupResolver(validationSchema) as any,
   });
   const { errors } = formState;
+  const router = useRouter();
 
   const fetchDataFromAPI = async () => {
     const doctorId = localStorage.getItem('doctorId');
@@ -105,13 +107,11 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ schedule }) => {
       },
     };
 
-    // Convert the month and date to zero-padded strings if they aren't already
     const paddedDate = data.date.padStart(2, '0');
     const paddedMonth = data.month.toString().padStart(2, '0');
 
     const formattedTimes = data.time.map((time) => time.replace('.', ':'));
 
-    // Create a new object with the zero-padded values and formatted times
     const newSchedule: Schedule = {
       ...data,
       date: paddedDate,
@@ -119,7 +119,6 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ schedule }) => {
       time: formattedTimes,
     };
 
-    // Initialize and populate existingSchedules only once
     const existingSchedules = [...(filteredSchedules ?? [])];
     existingSchedules.push(newSchedule);
 
@@ -190,6 +189,12 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ schedule }) => {
 
     setCalendarDays([...placeholders, ...daysOfMonth]);
   }, [currentDate]);
+
+  const goToAppointments = (date: Date) => {
+    const formattedDate = format(date, 'yyyy-MM-dd');
+
+    router.push(`/jadwal/janji-temu/${formattedDate}`);
+  };
   return (
     <div>
       <div className="flex items-center justify-between mb-5">
@@ -363,13 +368,19 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ schedule }) => {
             : false;
 
           const isCurrentMonth = isSameMonth(day, currentDate);
+          const formattedDate = format(day, 'yyyy-MM-dd');
 
           return (
             <div
               key={index}
-              className={`p-4 border ${isScheduled ? 'bg-blue-200' : ''} ${
-                !isCurrentMonth ? 'bg-gray-300' : ''
-              }`}
+              className={`p-4 border cursor-pointer ${
+                isScheduled ? 'bg-blue-200' : ''
+              } ${!isCurrentMonth ? 'bg-gray-300' : ''}`}
+              onClick={() => {
+                if (isScheduled) {
+                  router.push(`/jadwal/janji-temu/${formattedDate}`);
+                }
+              }}
             >
               {day.getDate()}
             </div>
