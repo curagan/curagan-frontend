@@ -16,19 +16,20 @@ import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { API_DOCTOR } from '../../lib/ApiLinks';
+import TimeDropdown from '../jadwal/TimeDropdown';
 
 type Schedule = {
   date: string;
   month: string;
   year: string;
-  time: string;
+  time: string[];
 };
 
 const validationSchema = yup.object().shape({
   date: yup.string().required(),
   month: yup.string().required(),
   year: yup.string().required(),
-  time: yup.string().required(),
+  time: yup.array().of(yup.string()).required(),
 });
 
 type CalendarComponentProps = {
@@ -43,9 +44,10 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ schedule }) => {
   const [dayOptions, setDayOptions] = useState<number[]>([]);
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
   const [refreshOptions, setRefreshOptions] = useState(false);
-  const { control, handleSubmit, errors } = useForm<Schedule>({
-    resolver: yupResolver(validationSchema),
-  }) as any;
+  const { control, handleSubmit, formState } = useForm<Schedule>({
+    resolver: yupResolver(validationSchema) as any,
+  });
+  const { errors } = formState;
 
   const fetchDataFromAPI = async () => {
     const doctorId = localStorage.getItem('doctorId');
@@ -103,8 +105,25 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ schedule }) => {
       },
     };
 
+    // Convert the month and date to zero-padded strings if they aren't already
+    const paddedDate = data.date.padStart(2, '0');
+    const paddedMonth = data.month.toString().padStart(2, '0');
+
+    const formattedTimes = data.time.map((time) => time.replace('.', ':'));
+
+    // Create a new object with the zero-padded values and formatted times
+    const newSchedule: Schedule = {
+      ...data,
+      date: paddedDate,
+      month: paddedMonth,
+      time: formattedTimes,
+    };
+
+    // Initialize and populate existingSchedules only once
     const existingSchedules = [...(filteredSchedules ?? [])];
-    existingSchedules.push(data);
+    existingSchedules.push(newSchedule);
+
+    console.log('Sending this data: ', existingSchedules);
 
     try {
       const response = await axios.put(
@@ -171,23 +190,28 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ schedule }) => {
 
     setCalendarDays([...placeholders, ...daysOfMonth]);
   }, [currentDate]);
-
   return (
     <div>
       <div className="flex items-center justify-between mb-5">
         <button onClick={prevMonth}>&lt;</button>
         <span>{format(currentDate, 'MMMM yyyy')}</span>
         <button onClick={nextMonth}>&gt;</button>
-        <button onClick={openModal}>+ tambah jadwal</button>
+        <button
+          className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+          onClick={openModal}
+        >
+          {' '}
+          tambah jadwal
+        </button>
       </div>
       <div className="grid grid-cols-7 gap-4">
-        <div>Minggu</div>
-        <div>Senin</div>
-        <div>Selasa</div>
-        <div>Rabu</div>
-        <div>Kamis</div>
-        <div>Jumat</div>
-        <div>Sabtu</div>
+        <div className="text-red-500 font-medium">Minggu</div>
+        <div className="font-medium">Senin</div>
+        <div className="font-medium">Selasa</div>
+        <div className="font-medium">Rabu</div>
+        <div className="font-medium">Kamis</div>
+        <div className="font-medium">Jumat</div>
+        <div className="font-medium">Sabtu</div>
       </div>
       {isModalOpen && (
         <div
@@ -221,6 +245,9 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ schedule }) => {
                       {...field}
                       className="mt-1 p-2 w-full border rounded-md"
                     >
+                      <option value="" disabled selected>
+                        Select Date
+                      </option>
                       {dayOptions.map((date) => (
                         <option key={date} value={date}>
                           {date}
@@ -245,11 +272,10 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ schedule }) => {
                     <select
                       {...field}
                       className="mt-1 p-2 w-full border rounded-md"
-                      onChange={(e) => {
-                        field.onChange(e);
-                        setSelectedMonth(Number(e.target.value));
-                      }}
                     >
+                      <option value="" disabled selected>
+                        Select Month
+                      </option>
                       {monthNames.map((month, index) => (
                         <option key={index} value={index + 1}>
                           {month}
@@ -274,11 +300,10 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ schedule }) => {
                     <select
                       {...field}
                       className="mt-1 p-2 w-full border rounded-md"
-                      onChange={(e) => {
-                        field.onChange(e);
-                        setSelectedYear(Number(e.target.value));
-                      }}
                     >
+                      <option value="" disabled selected>
+                        Select Year
+                      </option>
                       {Array.from(
                         { length: 11 },
                         (_, i) => new Date().getFullYear() + i,
@@ -301,18 +326,13 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ schedule }) => {
                 <Controller
                   name="time"
                   control={control}
-                  defaultValue=""
+                  defaultValue={[]}
                   render={({ field }) => (
-                    <select
-                      {...field}
-                      className="mt-1 p-2 w-full border rounded-md"
-                    >
-                      {timeSlots.map((time, index) => (
-                        <option key={index} value={time}>
-                          {time}
-                        </option>
-                      ))}
-                    </select>
+                    <TimeDropdown
+                      timeSlots={timeSlots}
+                      value={field.value}
+                      onChange={(value) => field.onChange(value)}
+                    />
                   )}
                 />
                 {errors?.time && (
@@ -331,7 +351,6 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ schedule }) => {
           </div>
         </div>
       )}
-
       <div className="grid grid-cols-7 gap-4">
         {calendarDays.map((day, index) => {
           const isScheduled = Array.isArray(filteredSchedules)
@@ -343,14 +362,14 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ schedule }) => {
               )
             : false;
 
-          const isCurrentMonth = isSameMonth(day, currentDate); // Add this line
+          const isCurrentMonth = isSameMonth(day, currentDate);
 
           return (
             <div
               key={index}
               className={`p-4 border ${isScheduled ? 'bg-blue-200' : ''} ${
                 !isCurrentMonth ? 'bg-gray-300' : ''
-              }`} // Modify this line
+              }`}
             >
               {day.getDate()}
             </div>
