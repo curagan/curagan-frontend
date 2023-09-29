@@ -16,6 +16,7 @@ import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { API_DOCTOR } from '../../lib/ApiLinks';
+import TimeDropdown from '../jadwal/TimeDropdown';
 
 type Schedule = {
   date: string;
@@ -189,7 +190,6 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ schedule }) => {
 
     setCalendarDays([...placeholders, ...daysOfMonth]);
   }, [currentDate]);
-
   return (
     <div>
       <div className="flex items-center justify-between mb-5">
@@ -319,33 +319,15 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ schedule }) => {
                 <Controller
                   name="time"
                   control={control}
-                  defaultValue={[]} // Change this line
+                  defaultValue={[]}
                   render={({ field }) => (
-                    <div className="flex flex-wrap">
-                      {timeSlots.map((time, index) => (
-                        <label key={index} className="flex items-center mr-3">
-                          <input
-                            type="checkbox"
-                            value={time}
-                            checked={field.value.includes(time)}
-                            onChange={(e) => {
-                              const value = [...field.value];
-                              if (e.target.checked) {
-                                value.push(time);
-                              } else {
-                                const index = value.indexOf(time);
-                                if (index >= 0) value.splice(index, 1);
-                              }
-                              field.onChange(value.sort());
-                            }}
-                          />
-                          {time}
-                        </label>
-                      ))}
-                    </div>
+                    <TimeDropdown
+                      timeSlots={timeSlots}
+                      value={field.value}
+                      onChange={(value) => field.onChange(value)}
+                    />
                   )}
                 />
-
                 {errors?.time && (
                   <p className="text-red-600">Please select a time.</p>
                 )}
@@ -362,7 +344,6 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ schedule }) => {
           </div>
         </div>
       )}
-
       <div className="grid grid-cols-7 gap-4">
         {calendarDays.map((day, index) => {
           const isScheduled = Array.isArray(filteredSchedules)
@@ -374,14 +355,14 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ schedule }) => {
               )
             : false;
 
-          const isCurrentMonth = isSameMonth(day, currentDate); // Add this line
+          const isCurrentMonth = isSameMonth(day, currentDate);
 
           return (
             <div
               key={index}
               className={`p-4 border ${isScheduled ? 'bg-blue-200' : ''} ${
                 !isCurrentMonth ? 'bg-gray-300' : ''
-              }`} // Modify this line
+              }`}
             >
               {day.getDate()}
             </div>
