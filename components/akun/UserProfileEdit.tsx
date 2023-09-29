@@ -9,6 +9,8 @@ import { Skeleton } from '../ui/skeleton';
 import { User } from './types';
 import ImageUpload from './ImageUpload';
 import FormChangePassword from './FormChangePassword';
+import { EditProfileSuccess } from './modals/EditProfileSuccess';
+import { EditProfileFailed } from './modals/EditProfileFailed';
 
 interface UserProfileProps {
   name: string;
@@ -86,12 +88,12 @@ const UserProfileEdit = ({
   };
 
   return (
-    <div className="flex flex-col gap-4 px-4 py-4">
+    <div className="relative w-full h-full flex flex-col gap-4 p-3">
       <div className="text-center my-4">
         {imageURL ? (
           <div className="relative">
             <img
-              className="inline-block h-28 w-28 rounded-full ring-1 ring-neutral-500"
+              className="inline-block h-24 w-24 rounded-full ring-1 ring-neutral-500"
               src={imageURL}
               alt="Profile picture"
             />
@@ -171,6 +173,8 @@ const UserProfileEdit = ({
       </div>
 
       <FormChangePassword />
+      {/* <EditProfileSuccess />
+      <EditProfileFailed /> */}
     </div>
   );
 };
