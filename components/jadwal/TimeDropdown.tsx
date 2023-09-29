@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 type TimeDropdownProps = {
   timeSlots: string[];
@@ -12,6 +12,7 @@ const TimeDropdown: React.FC<TimeDropdownProps> = ({
   onChange,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const toggleDropdown = () => setIsOpen(!isOpen);
 
@@ -26,15 +27,35 @@ const TimeDropdown: React.FC<TimeDropdownProps> = ({
     onChange(newValue);
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const sortedTimes = [...value].sort();
+  const earliestTime = sortedTimes.length > 0 ? sortedTimes[0] : 'Time';
+
   return (
-    <div className="relative inline-block text-left">
+    <div className="relative inline-block text-left" ref={dropdownRef}>
       <div>
         <button
           type="button"
           className="inline-flex justify-center w-full rounded-md border shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
           onClick={toggleDropdown}
         >
-          Select Time
+          {earliestTime}
           <svg
             className="-mr-1 ml-2 h-5 w-5"
             xmlns="http://www.w3.org/2000/svg"
@@ -54,10 +75,9 @@ const TimeDropdown: React.FC<TimeDropdownProps> = ({
       {isOpen && (
         <div className="origin-top-right absolute right-0 mt-2 w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
           <div
-            className="py-1"
+            className="py-1 overflow-y-auto h-40"
             role="menu"
             aria-orientation="vertical"
-            style={{ maxHeight: '150px', overflowY: 'auto' }}
           >
             {timeSlots.map((time, index) => (
               <label key={index} className="flex items-center px-4 py-2">
