@@ -73,7 +73,7 @@ export const AppointmentList = ({
 
               <div className="w-full flex items-center justify-end gap-2">
                 <span
-                  className={`w-fit px-2 py-1 rounded-md font-medium ${
+                  className={`w-fit rounded-md font-medium ${
                     appointment.status == 'Pending' ||
                     appointment.status == 'Submitted'
                       ? 'text-slate-900'
