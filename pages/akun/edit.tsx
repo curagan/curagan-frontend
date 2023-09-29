@@ -4,7 +4,7 @@ import { useUser } from '@/hooks/useUser';
 import { NextPage } from 'next';
 
 const AccountEdit: NextPage = () => {
-  const { user } = useUser();
+  const { user, setUser } = useUser();
 
   return (
     <LayoutWrapper>
@@ -13,6 +13,7 @@ const AccountEdit: NextPage = () => {
         email={user.email}
         imageURL={user.imageURL}
         hospital={user.hospital}
+        setUser={setUser}
       />
     </LayoutWrapper>
   );

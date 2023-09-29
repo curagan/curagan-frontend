@@ -1,6 +1,4 @@
 import { useRouter } from 'next/router';
-import Button from '../Button';
-import { FileEdit } from 'lucide-react';
 
 interface UserProfileProps {
   name: string;

@@ -1,4 +1,3 @@
-import Button from '../Button';
 import { Skeleton } from '../ui/skeleton';
 
 const UserProfileLoader = () => {
