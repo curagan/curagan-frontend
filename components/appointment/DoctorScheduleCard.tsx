@@ -38,9 +38,10 @@ export const DoctorScheduleCard = ({
               const getWeekday = thisDate.toLocaleDateString('id-ID', {
                 weekday: 'long',
               });
-              const getDayMonth = thisDate.toLocaleDateString('id-ID', {
+              const getDayMonthYear = thisDate.toLocaleDateString('id-ID', {
                 day: 'numeric',
                 month: 'short',
+                year: '2-digit',
               });
 
               return (
@@ -57,7 +58,7 @@ export const DoctorScheduleCard = ({
                   }`}
                 >
                   <span className="font-medium">{getWeekday}</span>
-                  <span className="text-sm">{getDayMonth}</span>
+                  <span className="text-sm">{getDayMonthYear}</span>
                 </button>
               );
             })}
