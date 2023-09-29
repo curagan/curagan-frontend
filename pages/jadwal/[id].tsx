@@ -2,8 +2,8 @@ import { GetServerSideProps } from 'next';
 import axios from 'axios';
 import CalendarComponent from '../../components/jadwal/CalendarComponent';
 import { useEffect, useState } from 'react';
+import { LayoutWrapper } from '@/components/layout/LayoutWrapper';
 
-// Standardized Schedule type
 type Schedule = {
   date: string;
   month: string;
@@ -39,12 +39,14 @@ const JadwalPage: React.FC<JadwalProps> = ({ doctor }) => {
   }, [doctor]);
 
   return (
-    <div>
-      <h1>{doctor.name}</h1>
-      <p>{doctor.specialization}</p>
-      <p>{doctor.hospital}</p>
-      <CalendarComponent schedule={parsedSchedule} />
-    </div>
+    <LayoutWrapper>
+      <div>
+        <h1>{doctor.name}</h1>
+        <p>{doctor.specialization}</p>
+        <p>{doctor.hospital}</p>
+        <CalendarComponent schedule={parsedSchedule} />
+      </div>
+    </LayoutWrapper>
   );
 };
 
