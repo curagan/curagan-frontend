@@ -21,14 +21,14 @@ type Schedule = {
   date: string;
   month: string;
   year: string;
-  time: string;
+  time: string[];
 };
 
 const validationSchema = yup.object().shape({
   date: yup.string().required(),
   month: yup.string().required(),
   year: yup.string().required(),
-  time: yup.string().required(),
+  time: yup.array().of(yup.string()).required(),
 });
 
 type CalendarComponentProps = {
@@ -43,9 +43,10 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ schedule }) => {
   const [dayOptions, setDayOptions] = useState<number[]>([]);
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
   const [refreshOptions, setRefreshOptions] = useState(false);
-  const { control, handleSubmit, errors } = useForm<Schedule>({
-    resolver: yupResolver(validationSchema),
-  }) as any;
+  const { control, handleSubmit, formState } = useForm<Schedule>({
+    resolver: yupResolver(validationSchema) as any,
+  });
+  const { errors } = formState;
 
   const fetchDataFromAPI = async () => {
     const doctorId = localStorage.getItem('doctorId');
@@ -103,8 +104,25 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ schedule }) => {
       },
     };
 
+    // Convert the month and date to zero-padded strings if they aren't already
+    const paddedDate = data.date.padStart(2, '0');
+    const paddedMonth = data.month.toString().padStart(2, '0');
+
+    const formattedTimes = data.time.map((time) => time.replace('.', ':'));
+
+    // Create a new object with the zero-padded values and formatted times
+    const newSchedule: Schedule = {
+      ...data,
+      date: paddedDate,
+      month: paddedMonth,
+      time: formattedTimes,
+    };
+
+    // Initialize and populate existingSchedules only once
     const existingSchedules = [...(filteredSchedules ?? [])];
-    existingSchedules.push(data);
+    existingSchedules.push(newSchedule);
+
+    console.log('Sending this data: ', existingSchedules);
 
     try {
       const response = await axios.put(
@@ -301,20 +319,33 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ schedule }) => {
                 <Controller
                   name="time"
                   control={control}
-                  defaultValue=""
+                  defaultValue={[]} // Change this line
                   render={({ field }) => (
-                    <select
-                      {...field}
-                      className="mt-1 p-2 w-full border rounded-md"
-                    >
+                    <div className="flex flex-wrap">
                       {timeSlots.map((time, index) => (
-                        <option key={index} value={time}>
+                        <label key={index} className="flex items-center mr-3">
+                          <input
+                            type="checkbox"
+                            value={time}
+                            checked={field.value.includes(time)}
+                            onChange={(e) => {
+                              const value = [...field.value];
+                              if (e.target.checked) {
+                                value.push(time);
+                              } else {
+                                const index = value.indexOf(time);
+                                if (index >= 0) value.splice(index, 1);
+                              }
+                              field.onChange(value.sort());
+                            }}
+                          />
                           {time}
-                        </option>
+                        </label>
                       ))}
-                    </select>
+                    </div>
                   )}
                 />
+
                 {errors?.time && (
                   <p className="text-red-600">Please select a time.</p>
                 )}
