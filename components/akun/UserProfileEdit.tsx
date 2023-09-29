@@ -1,19 +1,20 @@
-import Button from '../Button';
-import { FileEdit } from 'lucide-react';
 import axios from 'axios';
 import * as yup from 'yup';
-import { API_DOCTOR, API_PATIENT } from '@/lib/ApiLinks';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { API_DOCTOR, API_PATIENT } from '@/lib/ApiLinks';
 import { Skeleton } from '../ui/skeleton';
+import { User } from './types';
+import ImageUpload from './ImageUpload';
 
 interface UserProfileProps {
   name: string;
   email: string;
   imageURL: string;
   hospital?: string;
+  setUser: React.Dispatch<React.SetStateAction<User>>;
 }
 
 type FormValues = {
@@ -31,6 +32,7 @@ const UserProfileEdit = ({
   email,
   imageURL,
   hospital,
+  setUser,
 }: UserProfileProps) => {
   const [disableSubmit, setDisableSubmit] = useState(false);
 
@@ -61,9 +63,13 @@ const UserProfileEdit = ({
 
     try {
       setDisableSubmit(true);
-      await axios.put(`${API}/${userId}`, formData, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axios.put(
+        `${API}/${userId}`,
+        { ...formData, imageURL },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
       router.push('/akun');
     } catch (error) {
       setDisableSubmit(false);
@@ -71,15 +77,27 @@ const UserProfileEdit = ({
     }
   };
 
+  const handleImageUploadSuccess = (imageURL: string) => {
+    setUser((prevState) => ({
+      ...prevState,
+      imageURL: imageURL,
+    }));
+  };
+
   return (
     <div className="flex flex-col gap-4 px-4 py-4">
       <div className="text-center my-4">
         {imageURL ? (
-          <img
-            className="inline-block h-28 w-28 rounded-full ring-1 ring-neutral-500"
-            src={imageURL}
-            alt="Profile picture"
-          />
+          <div className="relative">
+            <img
+              className="inline-block h-28 w-28 rounded-full ring-1 ring-neutral-500"
+              src={imageURL}
+              alt="Profile picture"
+            />
+            <div className="absolute bottom-2 right-40">
+              <ImageUpload onSuccess={handleImageUploadSuccess} />
+            </div>
+          </div>
         ) : (
           <Skeleton className="inline-block h-28 w-28 rounded-full" />
         )}
