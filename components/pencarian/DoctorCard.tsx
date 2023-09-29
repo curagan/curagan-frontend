@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import imgDoctorAvatar from '@/public/icons/doctor-avatar.png';
 import imgLocation from '@/public/icons/location.png';
+import { useRouter } from 'next/router';
 
 interface IDoctorCard {
   href: string;
@@ -10,10 +11,19 @@ interface IDoctorCard {
 }
 
 export const DoctorCard = ({ href, name, hospitalName }: IDoctorCard) => {
+  const router = useRouter();
+
   return (
-    <Link
-      href={href}
-      className="w-full flex gap-2 items-center justify-between p-2 rounded-md bg-slate-100"
+    <div
+      onClick={() => {
+        if (localStorage.getItem('userId') == null) {
+          router.push('/login');
+          return;
+        } else {
+          router.push(href);
+        }
+      }}
+      className="w-full flex gap-2 items-center justify-between p-2 rounded-md bg-slate-100 cursor-pointer"
     >
       <div className="w-20 h-20 flex items-center justify-center rounded-md border">
         <Image src={imgDoctorAvatar} alt={name} className="object-contain" />
@@ -40,6 +50,6 @@ export const DoctorCard = ({ href, name, hospitalName }: IDoctorCard) => {
       <span className="min-w-fit p-2 text-sm font-medium rounded-md bg-slate-900 text-white">
         Buat Janji
       </span>
-    </Link>
+    </div>
   );
 };
