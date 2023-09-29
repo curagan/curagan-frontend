@@ -196,10 +196,16 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ schedule }) => {
         <button onClick={prevMonth}>&lt;</button>
         <span>{format(currentDate, 'MMMM yyyy')}</span>
         <button onClick={nextMonth}>&gt;</button>
-        <button onClick={openModal}>+ tambah jadwal</button>
+        <button
+          className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+          onClick={openModal}
+        >
+          {' '}
+          tambah jadwal
+        </button>
       </div>
       <div className="grid grid-cols-7 gap-4">
-        <div>Minggu</div>
+        <div className="text-red-500">Minggu</div>
         <div>Senin</div>
         <div>Selasa</div>
         <div>Rabu</div>
@@ -239,6 +245,9 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ schedule }) => {
                       {...field}
                       className="mt-1 p-2 w-full border rounded-md"
                     >
+                      <option value="" disabled selected>
+                        Select Date
+                      </option>
                       {dayOptions.map((date) => (
                         <option key={date} value={date}>
                           {date}
@@ -263,11 +272,10 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ schedule }) => {
                     <select
                       {...field}
                       className="mt-1 p-2 w-full border rounded-md"
-                      onChange={(e) => {
-                        field.onChange(e);
-                        setSelectedMonth(Number(e.target.value));
-                      }}
                     >
+                      <option value="" disabled selected>
+                        Select Month
+                      </option>
                       {monthNames.map((month, index) => (
                         <option key={index} value={index + 1}>
                           {month}
@@ -292,11 +300,10 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ schedule }) => {
                     <select
                       {...field}
                       className="mt-1 p-2 w-full border rounded-md"
-                      onChange={(e) => {
-                        field.onChange(e);
-                        setSelectedYear(Number(e.target.value));
-                      }}
                     >
+                      <option value="" disabled selected>
+                        Select Year
+                      </option>
                       {Array.from(
                         { length: 11 },
                         (_, i) => new Date().getFullYear() + i,
