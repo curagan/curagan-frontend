@@ -72,7 +72,18 @@ export const AppointmentList = ({
               </div>
 
               <div className="w-full flex items-center justify-end gap-2">
-                <span className="w-fit px-2 py-1 rounded-md bg-slate-400">
+                <span
+                  className={`w-fit px-2 py-1 rounded-md font-medium ${
+                    appointment.status == 'Pending' ||
+                    appointment.status == 'Submitted'
+                      ? 'text-slate-900'
+                      : appointment.status == 'Accepted'
+                      ? 'text-green-500'
+                      : appointment.status == 'Rejected'
+                      ? 'text-red-500'
+                      : 'text-gray-500'
+                  }`}
+                >
                   {appointment.status}
                 </span>
               </div>
