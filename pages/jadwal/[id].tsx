@@ -8,7 +8,7 @@ type Schedule = {
   date: string;
   month: string;
   year: string;
-  time: string;
+  time: string[];
 };
 
 type Doctor = {
@@ -32,6 +32,7 @@ const JadwalPage: React.FC<JadwalProps> = ({ doctor }) => {
   useEffect(() => {
     try {
       const schedule: Schedule[] = JSON.parse(doctor.schedule);
+
       setParsedSchedule(schedule);
     } catch (err) {
       console.error("Failed to parse doctor's schedule", err);
