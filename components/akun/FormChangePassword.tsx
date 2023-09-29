@@ -2,9 +2,14 @@ import { API_DOCTOR, API_PATIENT } from '@/lib/ApiLinks';
 import { yupResolver } from '@hookform/resolvers/yup';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
+
+interface FormChangePasswordProps {
+  setDisplaySuccessModal: Dispatch<SetStateAction<boolean>>;
+  setDisplayFailedModal: Dispatch<SetStateAction<boolean>>;
+}
 
 type FormValues = {
   oldPassword: string;
@@ -16,7 +21,10 @@ const schema = yup.object({
   newPassword: yup.string().required('Password baru tidak boleh kosong'),
 });
 
-const FormChangePassword = () => {
+const FormChangePassword = ({
+  setDisplaySuccessModal,
+  setDisplayFailedModal,
+}: FormChangePasswordProps) => {
   const [disableSubmit, setDisableSubmit] = useState(false);
 
   const router = useRouter();
@@ -32,7 +40,8 @@ const FormChangePassword = () => {
   });
 
   const onSubmit = async (formData: FormValues) => {
-    console.log('UBAHPASS');
+    setDisableSubmit(true);
+
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
     const role = localStorage.getItem('role');
@@ -43,7 +52,6 @@ const FormChangePassword = () => {
     }
 
     try {
-      setDisableSubmit(true);
       await axios.patch(
         `${API}/change-password/${userId}`,
         { ...formData },
@@ -51,10 +59,10 @@ const FormChangePassword = () => {
           headers: { Authorization: `Bearer ${token}` },
         },
       );
-      router.push('/akun');
+      setDisplaySuccessModal(true);
     } catch (error) {
-      setDisableSubmit(false);
       console.error(error);
+      setDisplayFailedModal(true);
     }
   };
 
