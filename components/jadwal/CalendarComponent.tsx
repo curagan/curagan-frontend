@@ -152,22 +152,18 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ schedule }) => {
             </span>
             <form onSubmit={handleSubmit(handleFormSubmit)}>
               <label>
-                Day:
+                Date:
                 <Controller
                   name="date"
                   control={control}
                   defaultValue=""
                   render={({ field }) => (
-                    <select {...field}>
-                      {Array.from(
-                        { length: getDaysInMonth(currentDate) },
-                        (_, i) => i + 1,
-                      ).map((day) => (
-                        <option key={day} value={day}>
-                          {day}
-                        </option>
-                      ))}
-                    </select>
+                    <input
+                      {...field}
+                      type="text"
+                      placeholder="DD"
+                      className="your-input-class"
+                    />
                   )}
                 />
                 {errors?.date && <p>Please select a day.</p>}{' '}
@@ -240,7 +236,10 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ schedule }) => {
         {calendarDays.map((day, index) => {
           const isScheduled = Array.isArray(filteredSchedules)
             ? filteredSchedules.some(
-                (item) => parseInt(item.date) === day.getDate(),
+                (item) =>
+                  parseInt(item.date) === day.getDate() &&
+                  parseInt(item.month) === day.getMonth() + 1 &&
+                  parseInt(item.year) === day.getFullYear(),
               )
             : false;
 
