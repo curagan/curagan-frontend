@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { User2 } from 'lucide-react';
 import { API_DOCTOR, API_PATIENT } from '@/lib/ApiLinks';
 import { Skeleton } from '../ui/skeleton';
 import { User } from './types';
@@ -40,6 +41,7 @@ const UserProfileEdit = ({
   const [disableSubmit, setDisableSubmit] = useState(false);
   const [displaySuccessModal, setDisplaySuccessModal] = useState(false);
   const [displayFailedModal, setDisplayFailedModal] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const router = useRouter();
 
@@ -88,25 +90,40 @@ const UserProfileEdit = ({
       ...prevState,
       imageURL: imageURL,
     }));
+    setImageError(false);
+  };
+
+  const handleImageError = () => {
+    setImageError(true);
   };
 
   return (
     <div className="relative w-full h-full flex flex-col gap-4 p-3">
       <div className="text-center my-4">
-        {imageURL ? (
-          <div className="relative">
-            <img
+        <div className="relative">
+          {imageError ? (
+            <User2
               className="inline-block h-28 w-28 rounded-full ring-1 ring-neutral-500"
-              src={imageURL}
-              alt="Profile picture"
+              color="#737373"
             />
+          ) : imageURL ? (
+            <>
+              <img
+                className="inline-block h-28 w-28 rounded-full ring-1 ring-neutral-500"
+                src={imageURL}
+                alt="Profile picture"
+                onError={handleImageError}
+              />
+            </>
+          ) : (
+            <Skeleton className="inline-block h-28 w-28 rounded-full" />
+          )}
+          {imageURL && (
             <div className="absolute bottom-2 right-40">
               <ImageUpload onSuccess={handleImageUploadSuccess} />
             </div>
-          </div>
-        ) : (
-          <Skeleton className="inline-block h-28 w-28 rounded-full" />
-        )}
+          )}
+        </div>
       </div>
 
       <div className="border-b-2 border-neutral-200">
