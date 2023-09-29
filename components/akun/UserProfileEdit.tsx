@@ -8,6 +8,7 @@ import { API_DOCTOR, API_PATIENT } from '@/lib/ApiLinks';
 import { Skeleton } from '../ui/skeleton';
 import { User } from './types';
 import ImageUpload from './ImageUpload';
+import FormChangePassword from './FormChangePassword';
 
 interface UserProfileProps {
   name: string;
@@ -169,40 +170,7 @@ const UserProfileEdit = ({
         </form>
       </div>
 
-      <div>
-        <form>
-          <div className="flex flex-col gap-1 mb-1.5">
-            <label htmlFor="oldPassword">Password lama:</label>
-            <input
-              className="w-full p-3 py-2 rounded-md border border-gray-400"
-              type="password"
-              placeholder="******"
-            />
-
-            <label htmlFor="newPassword">Password baru:</label>
-            <input
-              className="w-full p-3 py-2 rounded-md border border-gray-400"
-              type="password"
-              placeholder="******"
-            />
-          </div>
-
-          <div className="mb-2">
-            <button
-              className="w-16 h-8 bg-red-500 hover:bg-red-700 rounded-[3px] text-white mr-2"
-              onClick={() => {
-                router.push('/akun');
-              }}
-            >
-              Batal
-            </button>
-
-            <button className="w-32 h-8 bg-blue-500 hover:bg-blue-700 rounded-[3px] text-white mr-2">
-              Ubah Password
-            </button>
-          </div>
-        </form>
-      </div>
+      <FormChangePassword />
     </div>
   );
 };
