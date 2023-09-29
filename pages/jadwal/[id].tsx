@@ -42,7 +42,7 @@ const JadwalPage: React.FC<JadwalProps> = ({ doctor }) => {
     <LayoutWrapper>
       <div>
         <h1>{doctor.name}</h1>
-        <p>{doctor.specialization}</p>
+        <p> Dokter {doctor.specialization}</p>
         <p>{doctor.hospital}</p>
         <CalendarComponent schedule={parsedSchedule} />
       </div>
