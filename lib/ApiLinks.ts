@@ -1,15 +1,12 @@
 export const API_REGISTER_PATIENT =
-  'https://curagan-api.nikenhpsr.site/patient/auth/register';
-export const API_LOGIN_PATIENT =
-  'https://curagan-api.nikenhpsr.site/patient/auth/login';
-export const API_LOGIN_DOCTOR =
-  'https://curagan-api.nikenhpsr.site/doctor/auth/login';
+  "http://localhost:4000/patient/auth/register";
+export const API_LOGIN_PATIENT = "http://localhost:4000/patient/auth/login";
+export const API_LOGIN_DOCTOR = "http://localhost:4000/doctor/auth/login";
 
-export const API_PATIENT = 'https://curagan-api.nikenhpsr.site/patient';
-export const API_DOCTOR = 'https://curagan-api.nikenhpsr.site/doctor';
-export const API_APPOINTMENT =
-  'https://curagan-api.nikenhpsr.site/appointments';
+export const API_PATIENT = "http://localhost:4000/patient";
+export const API_DOCTOR = "http://localhost:4000/doctor";
+export const API_APPOINTMENT = "http://localhost:4000/appointments";
 export const API_MY_APPOINTMENT =
-  'https://curagan-api.nikenhpsr.site/appointments/my-appointments';
+  "http://localhost:4000/appointments/my-appointments";
 export const API_APPOINTMENT_HISTORY =
-  'https://curagan-api.nikenhpsr.site/appointments/history';
+  "http://localhost:4000/appointments/history";
