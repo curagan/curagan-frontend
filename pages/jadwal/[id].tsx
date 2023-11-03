@@ -1,8 +1,8 @@
-import { GetServerSideProps } from "next";
-import axios from "axios";
-import CalendarComponent from "../../components/jadwal/CalendarComponent";
-import { useEffect, useState } from "react";
-import { LayoutWrapper } from "@/components/layout/LayoutWrapper";
+import { GetServerSideProps } from 'next';
+import axios from 'axios';
+import CalendarComponent from '../../components/jadwal/CalendarComponent';
+import { useEffect, useState } from 'react';
+import { LayoutWrapper } from '@/components/layout/LayoutWrapper';
 
 type Schedule = {
   date: string;
@@ -56,7 +56,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   let doctor: Doctor;
 
   try {
-    const res = await axios.get(`http://localhost:4000/doctor/${id}`);
+    const res = await axios.get(
+      `https://curagan-api.nikenhpsr.site/doctor/${id}`,
+    );
     doctor = res.data;
   } catch (err) {
     return {

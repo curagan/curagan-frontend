@@ -1,7 +1,6 @@
-import Image from "next/image";
-import imgLocation from "@/public/icons/location.png";
-import imgDoctorAvatar from "@/public/icons/doctor-avatar.png";
-import { useState } from "react";
+import Image from 'next/image';
+import imgLocation from '@/public/icons/location.png';
+import imgDoctorAvatar from '@/public/icons/doctor-avatar.png';
 
 interface IAppointmentList {
   appointmentData: any;
@@ -19,28 +18,27 @@ export const AppointmentList = ({
       {appointmentData.map((appointment: any) => {
         // Get doctor data
         const doctor = doctorsData.find(
-          (doctor: any) => doctor.id == appointment.doctorID
+          (doctor: any) => doctor.id == appointment.doctorID,
         );
 
         // Get date & time
         const thisDate = new Date(appointment.datetime);
-        const getDate = thisDate.toLocaleDateString("id-ID", {
-          weekday: "long",
-          day: "numeric",
-          month: "long",
-          year: "numeric",
+        const getDate = thisDate.toLocaleDateString('id-ID', {
+          weekday: 'long',
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
         });
-        const getTime = thisDate.toLocaleTimeString("id-ID", {
-          hour: "2-digit",
-          minute: "2-digit",
+        const getTime = thisDate.toLocaleTimeString('id-ID', {
+          hour: '2-digit',
+          minute: '2-digit',
         });
 
-        if (filterData == "All") {
+        if (filterData == 'All') {
           return (
-            <a
+            <div
               key={appointment.appointmentId}
-              className="w-full flex flex-col gap-2 p-2 border rounded-md bg-slate-200 cursor-pointer hover:bg-slate-400"
-              href={`/riwayat/${appointment.appointmentId}`}
+              className="w-full flex flex-col gap-2 p-2 border rounded-md bg-slate-200"
             >
               <div className="w-full flex items-center justify-between gap-2 text-lg font-medium">
                 <span>{getDate}</span>
@@ -76,20 +74,20 @@ export const AppointmentList = ({
               <div className="w-full flex items-center justify-end gap-2">
                 <span
                   className={`w-fit rounded-md font-medium ${
-                    appointment.status == "Pending" ||
-                    appointment.status == "Submitted"
-                      ? "text-slate-900"
-                      : appointment.status == "Accepted"
-                      ? "text-green-500"
-                      : appointment.status == "Rejected"
-                      ? "text-red-500"
-                      : "text-gray-500"
+                    appointment.status == 'Pending' ||
+                    appointment.status == 'Submitted'
+                      ? 'text-slate-900'
+                      : appointment.status == 'Accepted'
+                      ? 'text-green-500'
+                      : appointment.status == 'Rejected'
+                      ? 'text-red-500'
+                      : 'text-gray-500'
                   }`}
                 >
                   {appointment.status}
                 </span>
               </div>
-            </a>
+            </div>
           );
         } else {
           return appointment.status == filterData ? (
@@ -131,14 +129,14 @@ export const AppointmentList = ({
               <div className="w-full flex items-center justify-end gap-2">
                 <span
                   className={`w-fit px-2 py-1 rounded-md font-medium ${
-                    appointment.status == "Pending" ||
-                    appointment.status == "Submitted"
-                      ? "text-slate-900"
-                      : appointment.status == "Accepted"
-                      ? "text-green-500"
-                      : appointment.status == "Rejected"
-                      ? "text-red-500"
-                      : "text-gray-500"
+                    appointment.status == 'Pending' ||
+                    appointment.status == 'Submitted'
+                      ? 'text-slate-900'
+                      : appointment.status == 'Accepted'
+                      ? 'text-green-500'
+                      : appointment.status == 'Rejected'
+                      ? 'text-red-500'
+                      : 'text-gray-500'
                   }`}
                 >
                   {appointment.status}
@@ -146,7 +144,7 @@ export const AppointmentList = ({
               </div>
             </div>
           ) : (
-            ""
+            ''
           );
         }
       })}
