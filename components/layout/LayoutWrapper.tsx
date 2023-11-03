@@ -22,6 +22,11 @@ export const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
 				>
 					<span className="text-2xl font-bold text-[#13629D]">Curagan</span>
 				</Link>
+				<Image
+					src={imgNotification}
+					alt="curagan logo"
+					className="w-12 object-contain"
+				/>
 			</header>
 
 			<main className="grow w-full max-w-md max-h-full overflow-y-auto">
