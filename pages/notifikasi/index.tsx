@@ -1,95 +1,85 @@
-import { useEffect, useState, useRef } from "react";
-import { io } from "socket.io-client";
-import { LayoutWrapper } from "@/components/layout/LayoutWrapper";
+import { LoadingCard } from '@/components/LoadingCard';
+import { LayoutWrapper } from '@/components/layout/LayoutWrapper';
+import NotificationCard from '@/components/notifikasi/NotificationCard';
+import { API, API_NOTIFICATION } from '@/lib/ApiLinks';
+import axios from 'axios';
+import { NextPage } from 'next';
+import { useEffect, useState } from 'react';
+import { io } from 'socket.io-client';
+import useSWR from 'swr';
 
-interface Notification {
-	notificationId: string;
-	message: string;
-	senderId: string;
-	senderRole: string;
-	targetId: string;
-	targetRole: string;
-	appointmentId: string;
+interface INotification {
+  notificationId: string;
+  message: string;
+  senderId: string;
+  senderRole: string;
+  targetId: string;
+  targetRole: string;
+  appointmentId: string;
+  createdAt: string;
 }
 
-interface Patient {
-	name: string;
-}
+const Notifikasi: NextPage = () => {
+  // User role & userId
+  const [user, setUser] = useState({
+    role: '',
+    userId: '',
+  });
 
-export default function Notifikasi() {
-	const [notification, setNotification] = useState<Notification[]>([]);
-	const socket = io(":4000");
-	const lastNotificationIdRef = useRef<string | null>(null);
-	const [dataReady, setDataReady] = useState(false);
-	const [notificationMessage, setNotificationMessage] = useState<string[]>([]);
+  // Handles SWR conditional fetching
+  const [shouldFetch, setShouldFetch] = useState(false);
 
-	const initFetchNotification = async () => {
-		const response = await fetch(
-			`http://localhost:4000/notification/${localStorage.getItem("userId")}`
-		);
-		const data = await response.json();
-		setNotification(data);
-	};
+  // SWR
+  const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+  const { data, isLoading } = useSWR(
+    shouldFetch ? `${API_NOTIFICATION}/${user.userId}` : null,
+    fetcher,
+  );
+  if (!isLoading) console.log(data);
 
-	useEffect(() => {
-		initFetchNotification();
-		setDataReady(true);
-	}, []);
+  // Init socket.io
+  const socket = io(API);
 
-	useEffect(() => {
-		const data = {
-			role: localStorage.getItem("role"),
-			userId: localStorage.getItem("userId"),
-		};
-		socket.emit("identifyUser", data);
-	}, []);
+  // Store current user role & Id, then fetch data
+  useEffect(() => {
+    setUser({
+      role: localStorage.getItem('role') as string,
+      userId: localStorage.getItem('userId') as string,
+    });
+    setShouldFetch(true);
+  }, []);
 
-	const notifMessage = async (senderId: string, message: string) => {
-		const response = await fetch(`http://localhost:4000/patient/${senderId}`);
-		const data: Patient = await response.json();
-		setNotificationMessage((prev) => [...prev, `${data.name} ${message}`]);
-	};
+  // Socket
+  useEffect(() => {
+    socket.emit('identifyUser', user);
 
-	useEffect(() => {
-		socket.on("notification", (message: Notification) => {
-			if (message.notificationId !== lastNotificationIdRef.current) {
-				// Only add the new notification if it's not a duplicate
-				lastNotificationIdRef.current = message.notificationId;
-				setNotification((prev) => [...prev, message]);
-			}
-		});
-	}, []);
+    socket.on('notification', (message: INotification) => {
+      console.log('socket.on notification');
+    });
+  }, []);
 
-	useEffect(() => {
-		setNotificationMessage([]);
-		notification.map((notif) => {
-			notifMessage(notif.senderId, notif.message);
-		});
-	}, [notification]);
+  return (
+    <LayoutWrapper>
+      <div className="w-full flex flex-col gap-4 p-3 pb-0 ">
+        <h1 className="font-semibold text-xl">Notifikasi</h1>
 
-	return (
-		<LayoutWrapper>
-			<div>
-				<div className="w-full text-lg font-bold flex justify-center mb-8">
-					<p>Notification</p>
-				</div>
-				<div className="flex flex-col gap-4">
-					{dataReady
-						? notificationMessage.map((notif, idx) => {
-								return (
-									<a
-										href={`/detail/${notification[idx].appointmentId}`}
-										key={idx}
-									>
-										<div className="border-solid border-gray-500 border-[1px]">
-											{notif}
-										</div>
-									</a>
-								);
-						  })
-						: ""}
-				</div>
-			</div>
-		</LayoutWrapper>
-	);
-}
+        {isLoading ? (
+          <LoadingCard />
+        ) : data == undefined || data.length == 0 ? (
+          <div className="w-full flex flex-col gap-2 items-center justify-center p-2 rounded-md text-center bg-slate-100">
+            <span>Tidak ada notifikasi untuk saat ini</span>
+          </div>
+        ) : (
+          data.map((notification: INotification) => (
+            <NotificationCard
+              key={notification.notificationId}
+              notification={notification}
+            />
+          ))
+        )}
+      </div>
+    </LayoutWrapper>
+  );
+};
+
+export default Notifikasi;

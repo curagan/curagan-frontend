@@ -1,110 +1,142 @@
-import { API_APPOINTMENT } from "@/lib/ApiLinks";
-import axios from "axios";
-import Link from "next/link";
-import { Dispatch, SetStateAction, useState } from "react";
-import { io } from "socket.io-client";
-import { useRouter } from "next/router";
+import { API, API_APPOINTMENT, API_PATIENT } from '@/lib/ApiLinks';
+import axios from 'axios';
+import Link from 'next/link';
+import { Dispatch, SetStateAction, useState } from 'react';
+import { io } from 'socket.io-client';
 
 interface IAppointmentConfirmation {
-	selectedDate: string;
-	doctorId: string;
-	setDisplaySuccessAppointmentCard: Dispatch<SetStateAction<boolean>>;
-}
-
-interface Appointment {
-	appointmentId: string;
+  selectedDate: string;
+  doctorId: string;
+  doctorName: string;
+  setDisplaySuccessAppointmentCard: Dispatch<SetStateAction<boolean>>;
 }
 
 export const AppointmentConfirmation = ({
-	selectedDate,
-	doctorId,
-	setDisplaySuccessAppointmentCard,
+  selectedDate,
+  doctorId,
+  doctorName,
+  setDisplaySuccessAppointmentCard,
 }: IAppointmentConfirmation) => {
-	const [disableSubmit, setDisableSubmit] = useState(false);
-	const router = useRouter();
+  const [disableSubmit, setDisableSubmit] = useState(false);
 
-	const socket = io(":4000");
+  // Init socket.io
+  const socket = io(API);
 
-	const handleSubmit = async () => {
-		const role = localStorage.getItem("role");
+  const createAppointment = async () => {
+    // ignore appointment if role is doctor
+    const role = localStorage.getItem('role');
+    if (role == 'doctor') return;
 
-		// ignore appointment if role is doctor
-		if (role == "doctor") return;
+    // Get current user ID & token
+    const userId = localStorage.getItem('userId');
+    const token = localStorage.getItem('token');
 
-		setDisableSubmit(true);
+    // disable submit button
+    setDisableSubmit(true);
 
-		try {
-			const response = await axios.post(
-				API_APPOINTMENT,
-				{
-					patientID: localStorage.getItem("userId"),
-					doctorID: doctorId,
-					datetime: selectedDate,
-					status: "Pending",
-				},
-				{
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${localStorage.getItem("token")}`,
-					},
-				}
-			);
-			const data: Appointment = await response.data;
+    try {
+      const response = await axios.post(
+        API_APPOINTMENT,
+        {
+          patientID: userId,
+          doctorID: doctorId,
+          datetime: selectedDate,
+          status: 'Pending',
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      const data = await response.data;
+      return data.appointmentId;
+    } catch (error) {
+      setDisableSubmit(false);
+      console.log(error);
+      return undefined;
+    }
+  };
 
-			setDisplaySuccessAppointmentCard(true);
-			return data.appointmentId;
-		} catch (error) {
-			setDisableSubmit(false);
-			console.log(error);
-		}
-	};
+  const handleSubmit = async () => {
+    // Get appointmentId
+    const appointmentId = await createAppointment();
+    // Don't create notification if there's an error
+    if (appointmentId == undefined) return;
 
-	const submit = async () => {
-		const appointmentId = await handleSubmit();
-		console.log(appointmentId);
-		const targetId = router.query.id;
-		const senderRole = localStorage.getItem("role");
-		const message =
-			senderRole === "patient"
-				? `Asked For Appointment at ${selectedDate}`
-				: "Has Take Action to Your Appointment";
+    // Get current user role & ID
+    const role = localStorage.getItem('role');
+    const userId = localStorage.getItem('userId');
 
-		const data = {
-			senderRole: senderRole,
-			senderId: localStorage.getItem("userId"),
-			targetId: targetId,
-			targetRole: senderRole === "patient" ? "doctor" : "patient",
-			message: message,
-			appointmentId: appointmentId,
-		};
+    // Get patient data
+    const patientDataResponse = await axios.get(`${API_PATIENT}/${userId}`);
+    const patientData = await patientDataResponse.data;
 
-		socket.emit("createAppointment", data);
-	};
+    // Create message templates for each role
+    const messageToDoctor = {
+      text: 'Ada pasien yang ingin berkonsultasi dengan anda',
+      name: patientData.name,
+      date: selectedDate,
+      status: 'Pending',
+    };
+    const messageToPatient = {
+      text: 'Permintaan konsultasi telah dikirim. Dokter akan memproses permintaan anda secepatnya.',
+      name: doctorName,
+      date: selectedDate,
+      status: 'Pending',
+    };
 
-	return (
-		<div className="w-full flex items-stretch justify-center gap-2">
-			<Link
-				href={"/beranda"}
-				className="w-1/2 p-2 rounded-md text-sm text-center bg-red-600 text-white"
-			>
-				Kembali
-			</Link>
-			{disableSubmit ? (
-				<button
-					onClick={() => submit()}
-					disabled
-					className="w-1/2 p-2 rounded-md text-sm bg-slate-900 text-white bg-opacity-50"
-				>
-					Buat Appointment
-				</button>
-			) : (
-				<button
-					onClick={() => submit()}
-					className="w-1/2 p-2 rounded-md text-sm bg-slate-900 text-white"
-				>
-					Buat Appointment
-				</button>
-			)}
-		</div>
-	);
+    // Send appointment notification to doctor
+    socket.emit('createAppointment', {
+      senderRole: role,
+      senderId: userId,
+      targetId: doctorId,
+      targetRole: 'doctor',
+      message: JSON.stringify(messageToDoctor),
+      appointmentId: appointmentId,
+      createdAt: String(new Date().toUTCString()),
+    });
+
+    // Send appointment notification to current user
+    socket.emit('createAppointment', {
+      senderRole: role,
+      senderId: userId,
+      targetId: userId,
+      targetRole: 'patient',
+      message: JSON.stringify(messageToPatient),
+      appointmentId: appointmentId,
+      createdAt: String(new Date().toUTCString()),
+    });
+
+    // Display appointment successful card
+    setDisplaySuccessAppointmentCard(true);
+  };
+
+  return (
+    <div className="w-full flex items-stretch justify-center gap-2">
+      <Link
+        href={'/beranda'}
+        className="w-1/2 p-2 rounded-md text-sm text-center bg-red-600 text-white"
+      >
+        Kembali
+      </Link>
+      {disableSubmit ? (
+        <button
+          onClick={() => handleSubmit()}
+          disabled
+          className="w-1/2 p-2 rounded-md text-sm bg-slate-900 text-white bg-opacity-50"
+        >
+          Diproses...
+        </button>
+      ) : (
+        <button
+          onClick={() => handleSubmit()}
+          className="w-1/2 p-2 rounded-md text-sm bg-slate-900 text-white"
+        >
+          Buat Appointment
+        </button>
+      )}
+    </div>
+  );
 };

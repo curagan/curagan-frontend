@@ -32,6 +32,7 @@ const JanjiTemu = () => {
 
   const [doctorId, setDoctorId] = useState<string>('');
 
+  // Store doctorId
   useEffect(() => {
     const id = localStorage.getItem('doctorId');
     if (id) {
@@ -56,31 +57,35 @@ const JanjiTemu = () => {
     fetcher,
   );
 
-  if (error) return <div>Gagal memuat data</div>;
-  if (!data) return <div>Memuat...</div>;
-
   return (
     <LayoutWrapper>
-      <div>
-        <h1 className="font-bold">Janji Temu untuk tanggal {date}</h1>
-        {data.length === 0 ? (
-          <p>Tidak ada janji dengan pasien</p>
-        ) : (
-          data.map((appointment, index) => (
-            <AppointmentCard
-              key={index}
-              patientId={appointment.patientID}
-              date={appointment.datetime}
-            />
-          ))
-        )}
-        <button
-          onClick={() => router.back()}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
-        >
-          Kembali
-        </button>
-      </div>
+      {error ? (
+        <div>Gagal memuat data</div>
+      ) : !data ? (
+        <div>Memuat...</div>
+      ) : (
+        <div className="flex flex-col gap-4 p-3">
+          <h1 className="font-bold">Janji Temu untuk tanggal {date}</h1>
+
+          {data.length === 0 ? (
+            <p>Tidak ditemukan pasien yang membuat janji temu</p>
+          ) : (
+            data.map((appointment) => (
+              <AppointmentCard
+                key={appointment.appointmentId}
+                appointment={appointment}
+              />
+            ))
+          )}
+
+          <button
+            onClick={() => router.back()}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
+          >
+            Kembali
+          </button>
+        </div>
+      )}
     </LayoutWrapper>
   );
 };
