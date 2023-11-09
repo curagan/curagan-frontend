@@ -16,7 +16,15 @@ const Appointment: NextPage = () => {
   const id = router.query.id;
 
   // Fetch data
-  const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+  const fetcher = (url: string) =>
+    axios
+      .get(url, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
+      .then((res) => res.data);
   const { data, isLoading, error } = useSWR(`${API_DOCTOR}/${id}`, fetcher);
 
   // Get date from DoctorScheduleCard
@@ -49,6 +57,7 @@ const Appointment: NextPage = () => {
             <AppointmentConfirmation
               selectedDate={selectedDate}
               doctorId={id as string}
+              doctorName={data.name}
               setDisplaySuccessAppointmentCard={
                 setDisplaySuccessAppointmentCard
               }
