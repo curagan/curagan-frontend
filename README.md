@@ -45,8 +45,13 @@ https://curagan-frontend-personal.vercel.app/beranda
 The following technologies were used to build this project:
 
 - **Typescript**
+- **NextJS**
 - **Tailwind**
 - **Vercel**
+- **Express**
+- **Python**
+- **Railway**
+- **Postgres**
 
 ## Getting Started
 
