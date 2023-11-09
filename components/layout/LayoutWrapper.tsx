@@ -8,6 +8,7 @@ import imgAccount from '@/public/icons/avatar.png';
 import { LayoutMenu } from './LayoutMenu';
 import { useState } from 'react';
 import Link from 'next/link';
+import { LayoutNotification } from './LayoutNotification';
 
 export const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
   const [displayMenu, setDisplayMenu] = useState(false);
@@ -43,6 +44,7 @@ export const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
             href="/riwayat"
             src={imgAppointment}
           />
+          <LayoutNotification />
 
           {/* Menu button */}
           <button
