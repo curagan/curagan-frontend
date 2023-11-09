@@ -69,7 +69,7 @@ First, make sure that you have the following installed on your machine:
 1. Clone the repository to your local machine.
 2. Run `npm i` in the project directory to install the necessary dependencies.
 3. Put your own ENV in .ENV
-3. Run `npm dev` to start the application in development mode.
+4. Run `npm dev` to start the application in development mode.
 
 ### Important Scripts
 
