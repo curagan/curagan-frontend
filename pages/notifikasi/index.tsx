@@ -1,4 +1,6 @@
+import { LoadingCard } from '@/components/LoadingCard';
 import { LayoutWrapper } from '@/components/layout/LayoutWrapper';
+import NotificationCard from '@/components/notifikasi/NotificationCard';
 import { API, API_NOTIFICATION } from '@/lib/ApiLinks';
 import axios from 'axios';
 import { NextPage } from 'next';
@@ -6,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import useSWR from 'swr';
 
-interface Notification {
+interface INotification {
   notificationId: string;
   message: string;
   senderId: string;
@@ -14,6 +16,7 @@ interface Notification {
   targetId: string;
   targetRole: string;
   appointmentId: string;
+  createdAt: string;
 }
 
 const Notifikasi: NextPage = () => {
@@ -50,7 +53,7 @@ const Notifikasi: NextPage = () => {
   useEffect(() => {
     socket.emit('identifyUser', user);
 
-    socket.on('notification', (message: Notification) => {
+    socket.on('notification', (message: INotification) => {
       console.log('socket.on notification');
     });
   }, []);
@@ -60,7 +63,20 @@ const Notifikasi: NextPage = () => {
       <div className="w-full flex flex-col gap-4 p-3 pb-0 ">
         <h1 className="font-semibold text-xl">Notifikasi</h1>
 
-        <div>Content</div>
+        {isLoading ? (
+          <LoadingCard />
+        ) : data == undefined || data.length == 0 ? (
+          <div className="w-full flex flex-col gap-2 items-center justify-center p-2 rounded-md text-center bg-slate-100">
+            <span>Tidak ada notifikasi untuk saat ini</span>
+          </div>
+        ) : (
+          data.map((notification: INotification) => (
+            <NotificationCard
+              key={notification.notificationId}
+              notification={notification}
+            />
+          ))
+        )}
       </div>
     </LayoutWrapper>
   );
