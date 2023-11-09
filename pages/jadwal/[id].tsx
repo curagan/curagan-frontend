@@ -3,6 +3,7 @@ import axios from 'axios';
 import CalendarComponent from '../../components/jadwal/CalendarComponent';
 import { useEffect, useState } from 'react';
 import { LayoutWrapper } from '@/components/layout/LayoutWrapper';
+import { API_DOCTOR } from '@/lib/ApiLinks';
 
 type Schedule = {
   date: string;
@@ -56,9 +57,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   let doctor: Doctor;
 
   try {
-    const res = await axios.get(
-      `https://curagan-api.nikenhpsr.site/doctor/${id}`,
-    );
+    const res = await axios.get(`${API_DOCTOR}/${id}`);
     doctor = res.data;
   } catch (err) {
     return {
