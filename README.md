@@ -1,84 +1,64 @@
-# CURAGAN
+# Curagan
 
-Curagan is a mobile-based web application where we can make appointments with available doctors for consultation.
+## Prerequisite
 
-## Installation
+## Commit Message Guidelines
 
-### Client Side
+Our project uses [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) format for commit messages to ensure consistency and clarity. The project also utilize tooling like Husky and Commitizen to assist and enforce this.
 
-1. Pull this repository
+### Format
 
-2. Install Dependencies
+Each commit message consists of a **header**, **body**, and **footer**. The header is mandatory, while the body and footer are optional.
 
-```bash
-npm install
+```
+<type>(<scope>): <subject>
+<BLANK LINE>
+<body>
+<BLANK LINE>
+<footer>
 ```
 
-or
+#### Header
 
-```bash
-yarn install
-```
+The header is the most crucial part of the commit message:
 
-3. Run the service
+- **type**: This represents the nature of the change and can be one of the following:
+  - `feat`: A new feature
+  - `fix`: A bug fix
+  - `docs`: Documentation-only changes
+  - `style`: Changes that don't affect the meaning of the code (white-space, formatting, etc.)
+  - `refactor`: A code change that neither fixes a bug nor adds a feature
+  - `test`: Adding or modifying tests
+  - `chore`: Changes to the build process or auxiliary tools/libraries/documentation
 
-```bash
-npm run dev
-```
+#### Body
 
-<mark> Doctor's Account can only created using a request to admin</mark>
+This is where you can provide a more detailed description of the change. You can explain the motivation for the change, contrast this with previous behavior, or even reasons for certain parts of the change.
 
-### Server Side
+#### Footer
 
-1. Pull this repository: https://github.com/yankyhermawan/curagan-personal.git
+This is where you can reference any issues related to this commit (e.g., `Closes #42` or `Related to #57`).
 
-2. Install Dependencies
+### Using Commitizen
 
-```bash
-npm install
-```
+---
 
-or
+To make crafting these commit messages easier, we've integrated Commitizen:
 
-```bash
-yarn install
-```
+1. Stage your changes: `git add .`
+2. Run: `npm run commit`
+3. Follow the interactive prompts to craft your commit message.
 
-3. Run the service
+### Manual Commits
 
-```bash
-npm run dev
-```
+---
 
-<mark>Create .env by your own</mark>
+If you prefer not to use Commitizen:
 
-## Preview
+1. Stage your changes: `git add .`
+2. Commit your changes: `git commit -m "type(scope): subject"`
+3. Ensure your commit message follows the Conventional Commits format.
 
-Beranda
+### Commit Linting
 
-![Beranda](./assets/home.png)
-
-Pencarian
-
-![Pencarian](./assets/search.png)
-
-Riwayat
-
-![Riwayat Konsultasi](./assets/history.png)
-
-Notifikasi
-
-![Notifikasi](./assets/notif.png)
-
-Jadwal Dokter
-
-![Jadwal Dokter](./assets/doctorAppointment.png)
-
-Atur Jadwal Dokter
-
-![Atur Jadwal Dokter](./assets/jadwalDokter.png)
-
-Known Issues:
-
-- NextJS Router can't define the id parameter in some routes
-- It will error if you try to refresh the page (even though the first visit has no error)
+We use `commitlint` to ensure that commit messages adhere to the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) format. If your commit message doesn't meet the standard, the commit will fail. Adjust the message accordingly and try again.

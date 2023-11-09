@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { Filters } from '@/components/riwayat/Filters';
 import { AppointmentList } from '@/components/riwayat/AppointmentList';
 import { LoadingCard } from '@/components/LoadingCard';
-import Link from 'next/link';
+import UserOnlyFeature from '@/components/riwayat/UserOnlyFeature';
 
 const Riwayat: NextPage = () => {
   // Get token from localstorage
@@ -43,29 +43,22 @@ const Riwayat: NextPage = () => {
         <h1 className="font-semibold text-xl">Riwayat Konsultasi</h1>
 
         {!isBrowser || userId == null ? (
-          <div className="w-full flex flex-col gap-4 items-center justify-center p-2 rounded-md text-center bg-slate-100">
-            <span className="text-lg font-medium">
-              Fitur Khusus Pelanggan Terdaftar
-            </span>
-            <span>Silahkan login sebagai pelanggan</span>
-            <Link
-              href={'/login'}
-              className="w-full p-2 text-lg font-medium rounded-md bg-[#13629D] text-white"
-            >
-              Login
-            </Link>
-          </div>
+          <UserOnlyFeature />
         ) : doctors.isLoading || userAppointment.isLoading ? (
           <LoadingCard />
         ) : (
           <>
             <Filters setFilterData={setFilterData} />
 
-            <AppointmentList
-              appointmentData={userAppointment.data}
-              doctorsData={doctors.data}
-              filterData={filterData}
-            />
+            {!userAppointment.data ? (
+              <div>Data tidak ditemukan</div>
+            ) : (
+              <AppointmentList
+                appointmentData={userAppointment.data}
+                doctorsData={doctors.data}
+                filterData={filterData}
+              />
+            )}
           </>
         )}
       </div>
