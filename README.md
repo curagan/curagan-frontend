@@ -36,7 +36,7 @@ https://curagan-frontend-personal.vercel.app/beranda
 | :------------ | :------------------------- |
 | Okky Anggoro  | Frontend Developer & UI UX |
 | Derian Melvin | Frontend Developer & UI UX |
-| Arya          | Frontend Developer         |
+| Arya Immanuel          | Frontend Developer         |
 | Yanky Hermawan         | Backend Developer         |
 | Mahdi Harish         | Backend Developer         |
 
