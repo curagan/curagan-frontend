@@ -30,7 +30,6 @@ export default function AppointmentInfoCard({
     `${API_PATIENT}/${appointment.patientID}`,
     fetcher,
   );
-  if (!isLoading) console.log(data);
 
   // Get date & time
   const thisDate = new Date(appointment.datetime);

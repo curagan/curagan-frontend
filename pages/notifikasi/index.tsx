@@ -58,6 +58,17 @@ const Notifikasi: NextPage = () => {
     });
   }, []);
 
+  const returnReversedNotifications = (dataSWR: any) => {
+    const reversedData = [...dataSWR].reverse();
+
+    return reversedData.map((notification: INotification) => (
+      <NotificationCard
+        key={notification.notificationId}
+        notification={notification}
+      />
+    ));
+  };
+
   return (
     <LayoutWrapper>
       <div className="w-full flex flex-col gap-4 p-3 pb-0 ">
@@ -70,12 +81,7 @@ const Notifikasi: NextPage = () => {
             <span>Tidak ada notifikasi untuk saat ini</span>
           </div>
         ) : (
-          data.map((notification: INotification) => (
-            <NotificationCard
-              key={notification.notificationId}
-              notification={notification}
-            />
-          ))
+          returnReversedNotifications(data)
         )}
       </div>
     </LayoutWrapper>
