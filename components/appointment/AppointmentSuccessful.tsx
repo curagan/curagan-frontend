@@ -2,7 +2,13 @@ import Link from 'next/link';
 import Image from 'next/image';
 import imgAppointmentSuccess from '@/public/icons/appointment-success.png';
 
-export const AppointmentSuccessful = () => {
+interface IAppointmentSuccessful {
+  appointmentType: 'EXTEND' | 'NEW';
+}
+
+export const AppointmentSuccessful = ({
+  appointmentType,
+}: IAppointmentSuccessful) => {
   return (
     <div className="absolute w-[95%] h-[97%] flex items-center justify-center p-2 rounded-sm bg-slate-900 bg-opacity-50">
       <div className="w-full h-2/3 flex flex-col items-center justify-evenly p-3 gap-5 rounded-md bg-gray-50">
@@ -16,7 +22,9 @@ export const AppointmentSuccessful = () => {
 
         <div className="w-4/5 flex flex-col items-center gap-2 text-center">
           <span className="text-xl font-medium">
-            Appointment Anda telah berhasil dibuat
+            {appointmentType == 'NEW'
+              ? 'Appointment Anda telah berhasil dibuat'
+              : 'Permohonan perpanjangan konsultasi berhasil dikirim'}
           </span>
           <p className="text-sm text-gray-700">
             Dokter yang bersangkutan akan memproses permintaan anda. Mohon cek

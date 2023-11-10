@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import imgLocation from '@/public/icons/location.png';
 import imgDoctorAvatar from '@/public/icons/doctor-avatar.png';
+import Link from 'next/link';
 
 interface IAppointmentCard {
   doctorsData: any;
@@ -81,6 +82,18 @@ export default function AppointmentInfoCard({
           {appointment.status}
         </span>
       </div>
+
+      {/* Extension Request */}
+      {appointment.status == 'Accepted' && (
+        <div className="w-full flex items-center justify-between gap-2">
+          <Link
+            href={`/appointment/extend/${doctor.id}`}
+            className="w-full rounded-md p-2 text-center text-white bg-[#13629D] bg-opacity-80 hover:bg-opacity-100"
+          >
+            Minta perpanjangan konsultasi
+          </Link>
+        </div>
+      )}
     </div>
   );
 }

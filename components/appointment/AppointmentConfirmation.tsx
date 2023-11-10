@@ -5,6 +5,7 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import { io } from 'socket.io-client';
 
 interface IAppointmentConfirmation {
+  appointmentType: 'EXTEND' | 'NEW';
   selectedDate: string;
   doctorId: string;
   doctorName: string;
@@ -12,6 +13,7 @@ interface IAppointmentConfirmation {
 }
 
 export const AppointmentConfirmation = ({
+  appointmentType,
   selectedDate,
   doctorId,
   doctorName,
@@ -75,13 +77,19 @@ export const AppointmentConfirmation = ({
 
     // Create message templates for each role
     const messageToDoctor = {
-      text: 'Ada pasien yang ingin berkonsultasi dengan anda',
+      text:
+        appointmentType == 'NEW'
+          ? 'Ada pasien yang ingin berkonsultasi dengan anda'
+          : 'Permohonan perpanjangan konsultasi dari pasien',
       name: patientData.name,
       date: selectedDate,
       status: 'Pending',
     };
     const messageToPatient = {
-      text: 'Permintaan konsultasi telah dikirim. Dokter akan memproses permintaan anda secepatnya.',
+      text:
+        appointmentType == 'NEW'
+          ? 'Permintaan konsultasi telah dikirim. Dokter akan memproses permintaan anda secepatnya.'
+          : 'Permohonan perpanjangan konsultasi telah dikirim. Dokter akan memproses permintaan anda secepatnya.',
       name: doctorName,
       date: selectedDate,
       status: 'Pending',
@@ -123,7 +131,6 @@ export const AppointmentConfirmation = ({
       </Link>
       {disableSubmit ? (
         <button
-          onClick={() => handleSubmit()}
           disabled
           className="w-1/2 p-2 rounded-md text-sm bg-slate-900 text-white bg-opacity-50"
         >
@@ -134,7 +141,7 @@ export const AppointmentConfirmation = ({
           onClick={() => handleSubmit()}
           className="w-1/2 p-2 rounded-md text-sm bg-slate-900 text-white"
         >
-          Buat Appointment
+          {appointmentType == 'NEW' ? 'Buat Appointment' : 'Minta Perpanjangan'}
         </button>
       )}
     </div>

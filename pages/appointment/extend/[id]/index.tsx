@@ -11,7 +11,7 @@ import { useState } from 'react';
 import { AppointmentConfirmation } from '@/components/appointment/AppointmentConfirmation';
 import { AppointmentSuccessful } from '@/components/appointment/AppointmentSuccessful';
 
-const Appointment: NextPage = () => {
+const AppointmentExtend: NextPage = () => {
   const router = useRouter();
   const id = router.query.id;
 
@@ -55,7 +55,7 @@ const Appointment: NextPage = () => {
             </div>
 
             <AppointmentConfirmation
-              appointmentType={'NEW'}
+              appointmentType={'EXTEND'}
               selectedDate={selectedDate}
               doctorId={id as string}
               doctorName={data.name}
@@ -67,11 +67,11 @@ const Appointment: NextPage = () => {
         )}
 
         {displaySuccessAppointmentCard && (
-          <AppointmentSuccessful appointmentType={'NEW'} />
+          <AppointmentSuccessful appointmentType={'EXTEND'} />
         )}
       </div>
     </LayoutWrapper>
   );
 };
 
-export default Appointment;
+export default AppointmentExtend;

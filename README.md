@@ -61,10 +61,12 @@ If you prefer not to use Commitizen:
 
 ### Commit Linting
 
-We use `commitlint` to ensure that commit messages adhere to the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) format. If your commit message doesn't meet the standard, the commit will fail. Adjust the message accordingly and try again.
-=======
+# We use `commitlint` to ensure that commit messages adhere to the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) format. If your commit message doesn't meet the standard, the commit will fail. Adjust the message accordingly and try again.
+
 # CURAGAN
+
 ![](https://res.cloudinary.com/djudfrj8s/image/upload/v1699534150/curagan/curagan_Phone_i1noo3.png)
+
 ## Table of Content
 
 - [About the Project](#about-the-project)
@@ -97,13 +99,13 @@ https://curagan-frontend-personal.vercel.app/beranda
 
 ### Team
 
-| Name          | Role                       |
-| :------------ | :------------------------- |
-| Okky Anggoro  | Frontend Developer & UI UX |
-| Derian Melvin | Frontend Developer & UI UX |
-| Arya Immanuel          | Frontend Developer         |
-| Yanky Hermawan         | Backend Developer         |
-| Mahdi Harish         | Backend Developer         |
+| Name           | Role                       |
+| :------------- | :------------------------- |
+| Okky Anggoro   | Frontend Developer & UI UX |
+| Derian Melvin  | Frontend Developer & UI UX |
+| Arya Immanuel  | Frontend Developer         |
+| Yanky Hermawan | Backend Developer          |
+| Mahdi Harish   | Backend Developer          |
 
 ### Tech Stack
 
