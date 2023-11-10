@@ -1,3 +1,5 @@
+import AppointmentRequestAction from '../jadwal/AppointmentRequestAction';
+
 interface INotificationCard {
   notification: {
     notificationId: string;
@@ -34,11 +36,21 @@ export default function NotificationCard({ notification }: INotificationCard) {
 
   if (role == 'patient') {
     return (
-      <div className="w-full flex flex-col gap-2 p-2 rounded-md bg-slate-200">
+      <div
+        className={`w-full flex flex-col gap-2 p-2 rounded-md ${
+          status == 'Accepted'
+            ? 'bg-green-200'
+            : status == 'Rejected'
+            ? 'bg-red-200'
+            : 'bg-slate-200'
+        }`}
+      >
         <p className="text-xs text-gray-500">
           {getDate(notification.createdAt)} @ {getTime(notification.createdAt)}
         </p>
+
         <p>{text}</p>
+
         <div className="w-full flex flex-col gap-1 px-3">
           <p className="flex gap-1">
             <strong className="w-[72px]">Dokter: </strong>
@@ -59,9 +71,13 @@ export default function NotificationCard({ notification }: INotificationCard) {
 
   if (role == 'doctor') {
     return (
-      <div className="w-full flex flex-col gap-2 p-2">
-        <p className="text-xs text-gray-500">{notification.createdAt}</p>
+      <div className="w-full flex flex-col gap-2 p-2 rounded-md bg-slate-200">
+        <p className="text-xs text-gray-500">
+          {getDate(notification.createdAt)} @ {getTime(notification.createdAt)}
+        </p>
+
         <p>{text}</p>
+
         <div className="w-full flex flex-col gap-1 px-3">
           <p className="flex gap-1">
             <strong className="w-[72px]">Nama: </strong>
@@ -76,6 +92,11 @@ export default function NotificationCard({ notification }: INotificationCard) {
             {getTime(date)}
           </p>
         </div>
+
+        <AppointmentRequestAction
+          appointmentId={notification.appointmentId}
+          status={status}
+        />
       </div>
     );
   }
