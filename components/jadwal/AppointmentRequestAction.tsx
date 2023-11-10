@@ -1,6 +1,9 @@
-import { API_APPOINTMENT } from '@/lib/ApiLinks';
+import { API, API_APPOINTMENT } from '@/lib/ApiLinks';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { io } from 'socket.io-client';
+import useSWR from 'swr';
+import { LoadingCard } from '../LoadingCard';
 
 export default function AppointmentRequestAction({
   appointmentId,
@@ -10,7 +13,7 @@ export default function AppointmentRequestAction({
   status: string;
 }) {
   // Disable accept / reject buttons after submission
-  const [disableSubmit, setDisableSubmit] = useState(true);
+  const [disableSubmit, setDisableSubmit] = useState(false);
 
   // Display message after appointment status successfully updated
   const [statusUpdated, setStatusUpdated] = useState(false);
@@ -18,17 +21,86 @@ export default function AppointmentRequestAction({
   // Handle displayed message when appointment is accepted / rejected
   const [appointmentAccepted, setAppointmentAccepted] = useState(false);
 
+  // SWR
+  const fetcher = (url: string) =>
+    axios
+      .get(url, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
+      .then((res) => res.data);
+  const { data, isLoading, error } = useSWR(
+    `${API_APPOINTMENT}/${appointmentId}`,
+    fetcher,
+  );
+
+  // Init socket.io
+  const socket = io(API);
+
+  // Send notification to users
+  const sendNotification = async (requestAccepted: boolean) => {
+    // Get current user role
+    const role = localStorage.getItem('role');
+
+    if (requestAccepted) {
+      // Create message templates for patient
+      const messageToPatient = {
+        text: 'Permintaan konsultasi anda dengan dokter yang bersangkutan diterima.',
+        name: data.doctor.name,
+        date: data.datetime,
+        status: 'Accepted',
+      };
+
+      // Send appointment notification to patient
+      socket.emit('createAppointment', {
+        senderRole: role,
+        senderId: data.doctorID,
+        targetId: data.patientID,
+        targetRole: 'patient',
+        message: JSON.stringify(messageToPatient),
+        appointmentId: appointmentId,
+        createdAt: String(new Date().toUTCString()),
+      });
+    } else {
+      // Create message templates for patient
+      const messageToPatient = {
+        text: 'Permintaan konsultasi anda dengan dokter yang bersangkutan ditolak.',
+        name: data.doctor.name,
+        date: data.datetime,
+        status: 'Rejected',
+      };
+
+      // Send appointment notification to patient
+      socket.emit('createAppointment', {
+        senderRole: role,
+        senderId: data.doctorID,
+        targetId: data.patientID,
+        targetRole: 'patient',
+        message: JSON.stringify(messageToPatient),
+        appointmentId: appointmentId,
+        createdAt: String(new Date().toUTCString()),
+      });
+    }
+  };
+
   // Appointment accept / reject handler
   const handleAppointmentRequest = async (requestAccepted: boolean) => {
     if (requestAccepted) {
       try {
+        // Disable button submission
         setDisableSubmit(true);
+
+        // Get doctor ID
+        const doctorId = localStorage.getItem('doctorId');
 
         // Update appointment status to 'Accepted'
         const response = await axios.patch(
-          `${API_APPOINTMENT}/${appointmentId}`,
+          `${API_APPOINTMENT}/${appointmentId}/${doctorId}`,
           {
             status: 'Accepted',
+            message: 'Appointment accepted',
           },
           {
             headers: {
@@ -41,6 +113,10 @@ export default function AppointmentRequestAction({
         // Update status & appointment state
         setAppointmentAccepted(true);
         setStatusUpdated(true);
+
+        // Notify patient
+        const notify = await sendNotification(true);
+
         console.log('Appointment Request Acccepted');
       } catch (error) {
         setDisableSubmit(false);
@@ -50,11 +126,15 @@ export default function AppointmentRequestAction({
       try {
         setDisableSubmit(true);
 
+        const doctorId = localStorage.getItem('doctorId');
+        console.log('Rejecting request...');
+
         // Update appointment status to 'Rejected'
         const response = await axios.patch(
-          `${API_APPOINTMENT}/${appointmentId}`,
+          `${API_APPOINTMENT}/${appointmentId}/${doctorId}`,
           {
             status: 'Rejected',
+            message: 'Appointment rejected',
           },
           {
             headers: {
@@ -66,6 +146,10 @@ export default function AppointmentRequestAction({
 
         // Update status state
         setStatusUpdated(true);
+
+        // Notify patient
+        const notify = await sendNotification(false);
+
         console.log('Appointment Request Rejected');
       } catch (error) {
         setDisableSubmit(false);
@@ -74,25 +158,11 @@ export default function AppointmentRequestAction({
     }
   };
 
-  useEffect(() => {
-    // Enable submit if status is 'Pending'
-    if (status == 'Pending') {
-      setDisableSubmit(false);
-    }
-
-    // Display message based on appointment status
-    if (status == 'Accepted') {
-      setAppointmentAccepted(true);
-      setStatusUpdated(true);
-    }
-    if (status == 'Rejected') {
-      setStatusUpdated(true);
-    }
-  }, [status]);
-
   return (
     <>
-      {!statusUpdated && (
+      {isLoading ? (
+        <LoadingCard />
+      ) : data.status == 'Pending' && !statusUpdated ? (
         <div className="w-full flex items-center justify-between gap-2">
           {/* Batal Button */}
           {disableSubmit ? (
@@ -128,12 +198,17 @@ export default function AppointmentRequestAction({
             </button>
           )}
         </div>
+      ) : (
+        ''
       )}
 
       {/* Status Message */}
-      {!statusUpdated ? (
+      {isLoading ? (
         ''
-      ) : statusUpdated && appointmentAccepted ? (
+      ) : data.status == 'Pending' ? (
+        ''
+      ) : data.status == 'Accepted' ||
+        (statusUpdated && appointmentAccepted) ? (
         <span className="font-semibold text-center text-green-700">
           Appointment pasien diterima
         </span>

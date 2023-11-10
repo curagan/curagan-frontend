@@ -3,13 +3,19 @@ import { NextPage } from 'next';
 import axios from 'axios';
 import useSWR from 'swr';
 import { API_DOCTOR, API_MY_APPOINTMENT } from '@/lib/ApiLinks';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Filters } from '@/components/riwayat/Filters';
 import { AppointmentList } from '@/components/riwayat/AppointmentList';
 import { LoadingCard } from '@/components/LoadingCard';
 import UserOnlyFeature from '@/components/riwayat/UserOnlyFeature';
 
 const Riwayat: NextPage = () => {
+  // State to control data based on appointment status
+  const [filterData, setFilterData] = useState('All');
+
+  // Handles SWR conditional fetching
+  const [shouldFetch, setShouldFetch] = useState(false);
+
   // Get token from localstorage
   const isBrowser = typeof window !== 'undefined';
   const userId = isBrowser ? localStorage.getItem('userId') : '';
@@ -29,20 +35,21 @@ const Riwayat: NextPage = () => {
 
   // SWR
   const userAppointment = useSWR(
-    `${API_MY_APPOINTMENT}/${userId}`,
+    shouldFetch ? `${API_MY_APPOINTMENT}/${userId}` : null,
     userFetcher,
   );
-  const doctors = useSWR(`${API_DOCTOR}`, doctorFetcher);
+  const doctors = useSWR(shouldFetch ? `${API_DOCTOR}` : null, doctorFetcher);
 
-  // State to control data based on appointment status
-  const [filterData, setFilterData] = useState('All');
+  useEffect(() => {
+    setShouldFetch(true);
+  }, []);
 
   return (
     <LayoutWrapper>
       <div className="w-full flex flex-col gap-4 p-3 pb-0 ">
         <h1 className="font-semibold text-xl">Riwayat Konsultasi</h1>
 
-        {!isBrowser || userId == null ? (
+        {userId == null ? (
           <UserOnlyFeature />
         ) : doctors.isLoading || userAppointment.isLoading ? (
           <LoadingCard />

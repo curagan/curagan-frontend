@@ -1,6 +1,11 @@
 import Image from 'next/image';
 import imgLocation from '@/public/icons/location.png';
 import imgDoctorAvatar from '@/public/icons/doctor-avatar.png';
+import imgPatientAvatar from '@/public/icons/avatar.png';
+import Link from 'next/link';
+import useSWR from 'swr';
+import { API_PATIENT } from '@/lib/ApiLinks';
+import axios from 'axios';
 
 interface IAppointmentCard {
   doctorsData: any;
@@ -14,6 +19,16 @@ export default function AppointmentInfoCard({
   // Get doctor data
   const doctor = doctorsData.find(
     (doctor: any) => doctor.id == appointment.doctorID,
+  );
+
+  // Get current role
+  const role = localStorage.getItem('role');
+
+  // Get patient data
+  const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+  const { data, isLoading } = useSWR(
+    `${API_PATIENT}/${appointment.patientID}`,
+    fetcher,
   );
 
   // Get date & time
@@ -53,16 +68,28 @@ export default function AppointmentInfoCard({
         </div>
       </div>
 
-      {/* Doctor Image & Name */}
+      {/* Doctor / Patient Image & Name */}
       <div className="w-full flex items-center gap-2 ml-3 my-2">
         <div className="w-14 h-14 flex items-center justify-center rounded-md border">
-          <Image
-            src={imgDoctorAvatar}
-            alt="doctor image"
-            className="object-contain"
-          />
+          {isLoading ? (
+            ''
+          ) : role == 'doctor' ? (
+            <Image
+              src={imgPatientAvatar}
+              alt="patient image"
+              className="object-contain"
+            />
+          ) : (
+            <Image
+              src={imgDoctorAvatar}
+              alt="doctor image"
+              className="object-contain"
+            />
+          )}
         </div>
-        <span>{doctor.name}</span>
+        <span>
+          {isLoading ? '...' : role == 'doctor' ? data.name : doctor.name}
+        </span>
       </div>
 
       {/* Appointment Status */}
@@ -81,6 +108,18 @@ export default function AppointmentInfoCard({
           {appointment.status}
         </span>
       </div>
+
+      {/* Extension Request */}
+      {role == 'patient' && appointment.status == 'Accepted' && (
+        <div className="w-full flex items-center justify-between gap-2">
+          <Link
+            href={`/appointment/extend/${doctor.id}`}
+            className="w-full rounded-md p-2 text-center text-white bg-[#13629D] bg-opacity-80 hover:bg-opacity-100"
+          >
+            Minta perpanjangan konsultasi
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
