@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
-import { API_APPOINTMENT_HISTORY } from '../../../lib/ApiLinks';
+import { API_MY_APPOINTMENT } from '../../../lib/ApiLinks';
 import axios from 'axios';
 import AppointmentCard from '../../../components/jadwal/AppointmentCard';
 import { useEffect, useState } from 'react';
@@ -52,7 +52,7 @@ const JanjiTemu = () => {
 
   const { data, error } = useSWR<AppointmentData[]>(
     date && doctorId
-      ? `${API_APPOINTMENT_HISTORY}/${doctorId}?start=${date}&end=${isoEndDate}`
+      ? `${API_MY_APPOINTMENT}/${doctorId}?start=${date}&end=${isoEndDate}`
       : null,
     fetcher,
   );
